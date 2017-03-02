@@ -201,6 +201,7 @@ pub fn write_record_header<W: io::Write>(writer: &mut W, hdr: &PcapRecordHeader)
 #[allow(dead_code,non_camel_case_types)]
 pub enum Linktype {
     NULL = 0,
+    /// Ethernet packets
     ETHERNET = 1,
     AX25 = 3,
     IEEE802_5 = 6,
@@ -211,6 +212,7 @@ pub enum Linktype {
     PPP_HDLC = 50,
     PPP_ETHER = 51,
     ATM_RFC1483 = 100,
+    /// IP packets (IPv4 or IPv6)
     RAW = 101,
     C_HDLC = 104,
     IEEE802_11 = 105,

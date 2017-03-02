@@ -6,6 +6,7 @@ use super::PcapError;
 use super::CapturedPacket;
 
 /// The options for creating a new packet capture file.
+#[derive(Copy,Clone)]
 pub struct WriteOptions {
     /// The maximum size of a packet that can be written to the file.
     pub snaplen : usize,
