@@ -1,7 +1,8 @@
 //! This crate has functionality for reading and writing packet capture packet files in the
 //! traditional libpcap file format. There is no support for the newer pcapng file format.
 //! 
-//! Please see the test cases for example usage.
+//! Please note that there is no functionality for capturing live packets from a network interface,
+//! this library only handles reading/writing data in the pcap file format.
 
 
 extern crate time;
@@ -9,6 +10,9 @@ extern crate time;
 mod def;
 /// Functionality for reading a packet capture.
 pub mod read;
+/// Functionality for writing packet captures.
+pub mod write;
+
 pub use def::Linktype;
 
 

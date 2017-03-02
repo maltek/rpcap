@@ -37,6 +37,14 @@ impl<R : io::Read> PcapReader<R> {
     pub fn get_linktype(&self) -> u32 {
         self.network
     }
+    /// Returns the maximum packet size. Packets larger than this usually get truncated to this
+    /// size by the recording application.
+    pub fn get_snaplen(&self) -> usize {
+        match self.state.as_ref() {
+            None => 0,
+            Some(state) => state.packet_buffer.len()
+        }
+    }
     /// This function allows iterating over the packets in the packet capture, in a similar fashion
     /// to normal iterators. (The exact interface is unfortunately incompatible.)
     /// 

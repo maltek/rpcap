@@ -4,7 +4,7 @@ use std::slice;
 use time;
 
 #[repr(C)]
-struct PcapFileHeaderInFile {
+pub struct PcapFileHeaderInFile {
     pub magic_num: u32, /* magic number */
     pub version_major : u16, /* major version number */
     pub version_minor : u16, /* minor version number */
@@ -12,6 +12,26 @@ struct PcapFileHeaderInFile {
     pub sigfigs : u32, /* accuracy of timestamps */
     pub snaplen : u32, /* max length of captured packets, in octets */
     pub network : u32, /* data link type */
+}
+const PCAP_VERSION_MAJOR : u16 = 2;
+const PCAP_VERSION_MINOR : u16 = 4;
+impl PcapFileHeaderInFile {
+    pub fn new(snaplen: usize, linktype: u32) -> Option<PcapFileHeaderInFile> {
+        let snap = snaplen as u32;
+        if snap as usize != snaplen {
+            None
+        } else {
+            Some(PcapFileHeaderInFile {
+                magic_num: PcapMagic::NanoSecondResolution.into(),
+                version_major: PCAP_VERSION_MAJOR,
+                version_minor: PCAP_VERSION_MINOR,
+                thiszone: 0,
+                sigfigs: 0,
+                snaplen: snap,
+                network: linktype,
+            })
+        }
+    }
 }
 
 pub struct PcapFileHeader {
@@ -23,7 +43,7 @@ pub struct PcapFileHeader {
 }
 impl PcapFileHeader {
     fn new(header: PcapFileHeaderInFile) -> Option<Self> {
-        let magic = if let Some(m) = PcapMagic::from(header.magic_num) { m } else { return None; };
+        let magic = if let Some(m) = PcapMagic::try_from(header.magic_num) { m } else { return None; };
 
         if magic.need_byte_swap() {
             header.version_major.swap_bytes();
@@ -41,7 +61,7 @@ impl PcapFileHeader {
 
         // docs say this version number hasn't changed since 1998, so this simplistic comparison
         // should suffice
-        if header.version_major != 2 || header.version_minor != 4 {
+        if header.version_major != PCAP_VERSION_MAJOR || header.version_minor != PCAP_VERSION_MINOR {
             return None;
         }
 
@@ -66,7 +86,7 @@ enum PcapMagic {
     NanoSecondResolutionByteSwap = 0x4d3cb2a1,
 }
 impl PcapMagic {
-    fn from(val: u32) -> Option<PcapMagic> {
+    fn try_from(val: u32) -> Option<PcapMagic> {
         if val == PcapMagic::Normal as u32 {
             Some(PcapMagic::Normal)
         } else if val == PcapMagic::NanoSecondResolution as u32 {
@@ -94,6 +114,11 @@ impl PcapMagic {
             PcapMagic::ByteSwap => false,
             PcapMagic::NanoSecondResolutionByteSwap => true,
         }
+    }
+}
+impl From<PcapMagic> for u32 {
+    fn from(val: PcapMagic) -> u32 {
+        val as u32
     }
 }
 
@@ -126,18 +151,30 @@ impl PcapRecordHeader {
     }
 }
 
-unsafe fn as_byte_slice<'a, T>(src: &'a mut T) -> &'a mut [u8] {
+unsafe fn as_byte_slice_mut<'a, T>(src: &'a mut T) -> &'a mut [u8] {
+    // TODO: this is likely undefined behaviour (creating two overlapping slices).
     let size = mem::size_of::<T>();
     let ptr : *mut T = src;
 
     let u8_ptr = ptr as *mut u8;
     return slice::from_raw_parts_mut(u8_ptr, size);
 }
+unsafe fn as_byte_slice<'a, T>(src: &'a T) -> &'a [u8] {
+    // TODO: this is likely undefined behaviour (creating two overlapping slices).
+    let size = mem::size_of::<T>();
+    let ptr : *const T = src;
+
+    let u8_ptr = ptr as *const u8;
+    return slice::from_raw_parts(u8_ptr, size);
+}
+/// This function is only safe when invoked with a type for which every possible bit pattern is
+/// valid. This is probably only true for structs with #[repr(C)] not containing any enums and not
+/// requiring any padding. between members. You'll need to carefully analyze this manually.
 unsafe fn read_type<T, R>(reader: &mut R) -> Result<T, io::Error>
         where T : Sized,
               R : io::Read {
     let mut val : T = mem::uninitialized();
-    reader.read_exact(as_byte_slice(&mut val))?;
+    reader.read_exact(as_byte_slice_mut(&mut val))?;
     Ok(val)
 }
 pub fn read_file_header<R : io::Read>(reader: &mut R) -> Result<Option<PcapFileHeader>, io::Error> {
@@ -145,6 +182,12 @@ pub fn read_file_header<R : io::Read>(reader: &mut R) -> Result<Option<PcapFileH
 }
 pub fn read_record_header<R : io::Read>(reader: &mut R) -> Result<PcapRecordHeader, io::Error> {
     unsafe { read_type(reader) }
+}
+pub fn write_file_header<W: io::Write>(writer: &mut W, hdr: &PcapFileHeaderInFile) -> Result<(), io::Error> {
+    writer.write_all(unsafe { as_byte_slice(hdr) })
+}
+pub fn write_record_header<W: io::Write>(writer: &mut W, hdr: &PcapRecordHeader) -> Result<(), io::Error> {
+    writer.write_all(unsafe { as_byte_slice(hdr) })
 }
 
 
