@@ -31,7 +31,7 @@ pub struct CapturedPacket<'a> {
     /// Depending on the `Linktype` of the capture, there might be completely different data in
     /// this packet. The user of this library is responsible for interpreting the contents
     /// correctly.
-    pub data: &'a mut [u8],
+    pub data: &'a [u8],
     /// The size of the packet as it was on the wire. Might be larger than the size of `data`, in
     /// which case `data` was truncated and is incomplete.
     pub orig_len: usize,
