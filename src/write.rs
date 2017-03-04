@@ -5,6 +5,7 @@ use super::def;
 use super::PcapError;
 use super::CapturedPacket;
 
+
 /// The options for creating a new packet capture file.
 #[derive(Copy,Clone)]
 pub struct WriteOptions {
@@ -62,7 +63,8 @@ impl<W : io::Write> PcapWriter<W> {
             orig_len: orig_len,
         };
 
-        def::write_record_header(&mut self.writer, &record_header).map_err(PcapError::from)
+        def::write_record_header(&mut self.writer, &record_header).map_err(PcapError::from)?;
+        self.writer.write_all(packet.data).map_err(PcapError::from)
     }
 
     /// Flushes the underlying writer.
@@ -78,44 +80,47 @@ impl<W : io::Write> PcapWriter<W> {
 
 #[cfg(test)]
 mod test {
-    use std::io::{BufWriter, BufReader};
+    use std::io::{BufWriter, BufReader, Write};
     use std::fs::File;
     use super::PcapWriter;
     use super::super::read::PcapReader;
 
     #[test]
     fn parse() {
-        let infile = File::open("/mnt/DATEN/ructfe2016/dump-ructfe-2016_2016-11-12_13:14:41.pcap").unwrap();
-        let reader = BufReader::new(infile);
-        let mut pcapr = PcapReader::new(reader).unwrap();
+        {
+            let infile = File::open("ictf2010.pcap").unwrap();
+            let reader = BufReader::new(infile);
+            let mut pcapr = PcapReader::new(reader).unwrap();
 
-        let outfile = File::create("/tmp/foo.pcap").unwrap();
-        let writer = BufWriter::new(outfile);
-        let mut pcapw = PcapWriter::new(writer, super::WriteOptions {
-            snaplen: pcapr.get_snaplen(),
-            linktype: pcapr.get_linktype()
-        }).unwrap();
+            let outfile = File::create("/tmp/foo.pcap").unwrap();
+            let writer = BufWriter::new(outfile);
+            let mut pcapw = PcapWriter::new(writer, super::WriteOptions {
+                snaplen: pcapr.get_snaplen(),
+                linktype: pcapr.get_linktype()
+            }).unwrap();
 
-        assert!(pcapr.get_linktype() == super::super::Linktype::RAW.into());
-        while let Some(packet) = pcapr.next().unwrap() {
-            pcapw.write(&packet).unwrap();
+            assert!(pcapr.get_linktype() == super::super::Linktype::RAW.into());
+            while let Some(packet) = pcapr.next().unwrap() {
+                pcapw.write(&packet).unwrap();
+            }
+            pcapw.take_writer().flush().unwrap();
         }
 
-        let reference = File::open("/mnt/DATEN/ructfe2016/dump-ructfe-2016_2016-11-12_13:14:41.pcap").unwrap();
+        let reference = File::open("ictf2010.pcap").unwrap();
         let reader = BufReader::new(reference);
         let mut pcapr = PcapReader::new(reader).unwrap();
 
-        let written = File::open("/mnt/DATEN/ructfe2016/dump-ructfe-2016_2016-11-12_13:14:41.pcap").unwrap();
+        let written = File::open("/tmp/foo.pcap").unwrap();
         let reader = BufReader::new(written);
         let mut pcapw = PcapReader::new(reader).unwrap();
 
-        assert!(pcapr.get_linktype() == pcapw.get_linktype());
-        assert!(pcapr.get_snaplen() == pcapw.get_snaplen());
+        assert_eq!(pcapr.get_linktype(), pcapw.get_linktype());
+        assert_eq!(pcapr.get_snaplen(), pcapw.get_snaplen());
         while let Some(packetr) = pcapr.next().unwrap() {
             let packetw = pcapw.next().unwrap().unwrap();
-            assert!(packetr.time == packetw.time);
-            assert!(packetr.orig_len == packetw.orig_len);
-            assert!(packetr.data == packetw.data);
+            assert_eq!(packetr.time, packetw.time);
+            assert_eq!(packetr.orig_len, packetw.orig_len);
+            assert_eq!(packetr.data, packetw.data);
         }
         assert!(pcapw.next().unwrap().is_none());
     }

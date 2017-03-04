@@ -92,23 +92,3 @@ impl<R : io::Read> PcapReader<R> {
         }
     }
 }
-
-#[cfg(test)]
-mod test {
-    use std::io::BufReader;
-    use std::fs::File;
-    use super::PcapReader;
-
-    #[test]
-    fn parse() {
-        let file = File::open("/mnt/DATEN/ructfe2016/dump-ructfe-2016_2016-11-12_13:14:41.pcap").unwrap();
-        let reader = BufReader::new(file);
-        let mut pcap = PcapReader::new(reader).unwrap();
-        let mut count = 0;
-        assert!(pcap.get_linktype() == super::super::Linktype::RAW.into());
-        while let Some(_) = pcap.next().unwrap() {
-            count += 1;
-        }
-        assert!(count == 24);
-    }
-}
