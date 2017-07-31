@@ -7,6 +7,11 @@
 
 extern crate time;
 
+extern crate bytepack;
+#[macro_use]
+extern crate bytepack_derive;
+
+
 mod def;
 /// Functionality for reading a packet capture.
 pub mod read;

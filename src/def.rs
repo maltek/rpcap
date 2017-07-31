@@ -1,9 +1,8 @@
-use std::mem;
-use std::io;
-use std::slice;
 use time;
 
-#[repr(C)]
+use bytepack::Packed;
+
+#[derive(Packed)]
 pub struct PcapFileHeaderInFile {
     pub magic_num: u32, /* magic number */
     pub version_major : u16, /* major version number */
@@ -42,7 +41,7 @@ pub struct PcapFileHeader {
     pub snaplen : usize,
 }
 impl PcapFileHeader {
-    fn new(header: PcapFileHeaderInFile) -> Option<Self> {
+    pub fn new(header: PcapFileHeaderInFile) -> Option<Self> {
         let magic = if let Some(m) = PcapMagic::try_from(header.magic_num) { m } else { return None; };
 
         if magic.need_byte_swap() {
@@ -122,7 +121,7 @@ impl From<PcapMagic> for u32 {
     }
 }
 
-#[repr(C)]
+#[derive(Packed)]
 pub struct PcapRecordHeader {
     pub ts_sec : u32, /* timestamp seconds */
     pub ts_usec : u32, /* timestamp microseconds */
@@ -149,45 +148,6 @@ impl PcapRecordHeader {
             Some(time::Timespec::new(sec + utc_off, nsec))
         }
     }
-}
-
-unsafe fn as_byte_slice_mut<'a, T>(src: &'a mut T) -> &'a mut [u8] {
-    // TODO: this is likely undefined behaviour (creating two overlapping slices).
-    let size = mem::size_of::<T>();
-    let ptr : *mut T = src;
-
-    let u8_ptr = ptr as *mut u8;
-    return slice::from_raw_parts_mut(u8_ptr, size);
-}
-unsafe fn as_byte_slice<'a, T>(src: &'a T) -> &'a [u8] {
-    // TODO: this is likely undefined behaviour (creating two overlapping slices).
-    let size = mem::size_of::<T>();
-    let ptr : *const T = src;
-
-    let u8_ptr = ptr as *const u8;
-    return slice::from_raw_parts(u8_ptr, size);
-}
-/// This function is only safe when invoked with a type for which every possible bit pattern is
-/// valid. This is probably only true for structs with #[repr(C)] not containing any enums and not
-/// requiring any padding. between members. You'll need to carefully analyze this manually.
-unsafe fn read_type<T, R>(reader: &mut R) -> Result<T, io::Error>
-        where T : Sized,
-              R : io::Read {
-    let mut val : T = mem::uninitialized();
-    reader.read_exact(as_byte_slice_mut(&mut val))?;
-    Ok(val)
-}
-pub fn read_file_header<R : io::Read>(reader: &mut R) -> Result<Option<PcapFileHeader>, io::Error> {
-    unsafe { read_type(reader) }.map(PcapFileHeader::new)
-}
-pub fn read_record_header<R : io::Read>(reader: &mut R) -> Result<PcapRecordHeader, io::Error> {
-    unsafe { read_type(reader) }
-}
-pub fn write_file_header<W: io::Write>(writer: &mut W, hdr: &PcapFileHeaderInFile) -> Result<(), io::Error> {
-    writer.write_all(unsafe { as_byte_slice(hdr) })
-}
-pub fn write_record_header<W: io::Write>(writer: &mut W, hdr: &PcapRecordHeader) -> Result<(), io::Error> {
-    writer.write_all(unsafe { as_byte_slice(hdr) })
 }
 
 

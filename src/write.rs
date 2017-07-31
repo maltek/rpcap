@@ -5,6 +5,8 @@ use super::def;
 use super::PcapError;
 use super::CapturedPacket;
 
+use bytepack::Packer;
+
 
 /// The options for creating a new packet capture file.
 #[derive(Copy,Clone)]
@@ -27,7 +29,7 @@ impl<W : io::Write> PcapWriter<W> {
     pub fn new(mut writer: W, opts: WriteOptions) -> Result<Self, PcapError> {
         let fh = def::PcapFileHeaderInFile::new(opts.snaplen, opts.linktype)
             .ok_or(PcapError::InvalidFileHeader)?;
-        def::write_file_header(&mut writer, &fh)?;
+        writer.pack(fh)?;
 
         PcapWriter::append(writer, opts)
     }
@@ -63,7 +65,7 @@ impl<W : io::Write> PcapWriter<W> {
             orig_len: orig_len,
         };
 
-        def::write_record_header(&mut self.writer, &record_header).map_err(PcapError::from)?;
+        self.writer.pack(record_header)?;
         self.writer.write_all(packet.data).map_err(PcapError::from)
     }
 

@@ -5,6 +5,8 @@ use super::def;
 use super::PcapError;
 use super::CapturedPacket;
 
+use bytepack::Unpacker;
+
 /// The `PcapReader` struct allows reading packets from a packet capture.
 pub struct PcapReader<R : io::Read> {
     reader: R,
@@ -21,7 +23,8 @@ struct PcapState {
 impl<R : io::Read> PcapReader<R> {
     /// Create a new `PcapReader` that reads the packet capture data from the specified `Reader`.
     pub fn new(mut reader: R) -> Result<Self, PcapError> {
-        let fh = def::read_file_header(&mut reader)?.ok_or(PcapError::InvalidFileHeader)?;
+        let fh = reader.unpack::<def::PcapFileHeaderInFile>()?;
+        let fh = def::PcapFileHeader::new(fh).ok_or(PcapError::InvalidFileHeader)?;
 
         let buffer = vec![0; fh.snaplen.into()];
         Ok(PcapReader {
@@ -54,7 +57,7 @@ impl<R : io::Read> PcapReader<R> {
             return Ok(None);
         }
 
-        let rh = def::read_record_header(&mut self.reader);
+        let rh = self.reader.unpack::<def::PcapRecordHeader>();
         if let Err(e) = rh {
             return if e.kind() == io::ErrorKind::UnexpectedEof {
                 self.state = None;
