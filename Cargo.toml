@@ -2,7 +2,22 @@
 name = "rpcap"
 version = "0.2.0"
 authors = ["Malte Kraus <git@maltekraus.de>"]
+repository = "https://github.com/maltek/rpcap"
 license = "MIT or Apache-2.0"
+description="An all-Rust library for reading and writing PCAP files."
+exclude = [
+    "*.pcap*",
+    ".gitignore",
+]
+readme = "README.md"
+categories = [
+    "network-programming",
+]
+keywords = [
+    "packet",
+    "pcap",
+    "sniffing",
+]
 
 [dependencies]
 time="0.1.35"
