@@ -1,5 +1,6 @@
 RPCAP
 =====
+[![Build Status](https://travis-ci.org/maltek/rpcap.svg?branch=master)](https://travis-ci.org/maltek/rpcap)
 
 An all-Rust library for reading and writing PCAP files.
 -------------------------------------------------------
