@@ -4,6 +4,8 @@ RPCAP
 An all-Rust library for reading and writing PCAP files.
 -------------------------------------------------------
 
+[Full API Documentation](https://maltek.github.io/rpcap/rpcap/)
+
 ```rust
 // read a PCAP file
 let infile = File::open("example.pcap").unwrap();

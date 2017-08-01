@@ -3,6 +3,7 @@ name = "rpcap"
 version = "0.2.0"
 authors = ["Malte Kraus <git@maltekraus.de>"]
 repository = "https://github.com/maltek/rpcap"
+documentation = "https://maltek.github.io/rpcap/rpcap/"
 license = "MIT or Apache-2.0"
 description="An all-Rust library for reading and writing PCAP files."
 exclude = [
