@@ -2,19 +2,32 @@ use time;
 
 use bytepack::Packed;
 
+/// The serialized file header data.
 #[derive(Packed)]
 pub struct PcapFileHeaderInFile {
-    pub magic_num: u32, /* magic number */
-    pub version_major : u16, /* major version number */
-    pub version_minor : u16, /* minor version number */
-    pub thiszone : i32, /* GMT to local correction */
-    pub sigfigs : u32, /* accuracy of timestamps */
-    pub snaplen : u32, /* max length of captured packets, in octets */
-    pub network : u32, /* data link type */
+    /// magic number
+    pub magic_num: u32,
+    /// major version number
+    pub version_major : u16,
+    /// minor version number
+    pub version_minor : u16,
+    /// GMT to local correction
+    pub thiszone : i32,
+    /// accuracy of timestamps
+    pub sigfigs : u32,
+    /// max length of captured packets, in octets */
+    pub snaplen : u32,
+    /// data link type
+    pub network : u32,
 }
+
+/// only supported major version
 const PCAP_VERSION_MAJOR : u16 = 2;
+/// only supported minor version
 const PCAP_VERSION_MINOR : u16 = 4;
+
 impl PcapFileHeaderInFile {
+    /// Creates a new file header based on snap length and link type.
     pub fn new(snaplen: usize, linktype: u32) -> Option<PcapFileHeaderInFile> {
         let snap = snaplen as u32;
         if snap as usize != snaplen {
@@ -33,15 +46,22 @@ impl PcapFileHeaderInFile {
     }
 }
 
+/// Fully parsed file header data.
 pub struct PcapFileHeader {
+    /// `true`, if the timestamp has nanosecond resolution (as opposed to microsecond resolution)
     pub ns_res: bool,
+    /// `true`, if header values need to be byte swapped when they are read from the file
     pub need_byte_swap: bool,
+    /// The datalink type.
     pub network : u32,
+    /// The UTC offset of the timestamps.
     pub utc_offset : i32,
+    /// The maximum size of pactured packets.
     pub snaplen : usize,
 }
 impl PcapFileHeader {
-    pub fn new(header: PcapFileHeaderInFile) -> Option<Self> {
+    /// Parse header data from file.
+    pub fn try_from(header: PcapFileHeaderInFile) -> Option<Self> {
         let magic = if let Some(m) = PcapMagic::try_from(header.magic_num) { m } else { return None; };
 
         if magic.need_byte_swap() {
@@ -60,44 +80,51 @@ impl PcapFileHeader {
 
         // docs say this version number hasn't changed since 1998, so this simplistic comparison
         // should suffice
-        if header.version_major != PCAP_VERSION_MAJOR || header.version_minor != PCAP_VERSION_MINOR {
-            return None;
+        if header.version_major == PCAP_VERSION_MAJOR && header.version_minor == PCAP_VERSION_MINOR {
+            Some(PcapFileHeader {
+                ns_res: magic.ns_res(),
+                need_byte_swap: magic.need_byte_swap(),
+                network: header.network,
+                utc_offset: header.thiszone,
+                snaplen: snaplen,
+            })
+        } else {
+            None
         }
-
-        return Some(PcapFileHeader {
-            ns_res: magic.ns_res(),
-            need_byte_swap: magic.need_byte_swap(),
-            network: header.network,
-            utc_offset: header.thiszone,
-            snaplen: snaplen,
-        });
     }
 }
 
 
+/// The different magic numbers for PCAP files.
 #[repr(u32)]
 #[allow(dead_code)]
 #[derive(Copy,Clone)]
 enum PcapMagic {
+    /// same byte order as in memory, timestamps with microsecond resolution
     Normal = 0xa1b2c3d4,
+    /// same byte order as in memory, timestamps with nanosecond resolution
     NanoSecondResolution = 0xa1b23c4d,
+    /// different byte order than in memory, timestamps with microsecond resolution
     ByteSwap = 0xd4c3b2a1,
+    /// different byte order than in memory, timestamps with nanosecond resolution
     NanoSecondResolutionByteSwap = 0x4d3cb2a1,
 }
 impl PcapMagic {
+    /// Try to convert a `u32` to a `PcapMagic`.
     fn try_from(val: u32) -> Option<PcapMagic> {
-        if val == PcapMagic::Normal as u32 {
+        if val == PcapMagic::Normal.into() {
             Some(PcapMagic::Normal)
-        } else if val == PcapMagic::NanoSecondResolution as u32 {
+        } else if val == PcapMagic::NanoSecondResolution.into() {
             Some(PcapMagic::NanoSecondResolution)
-        } else if val == PcapMagic::ByteSwap as u32 {
+        } else if val == PcapMagic::ByteSwap.into() {
             Some(PcapMagic::ByteSwap)
-        } else if val == PcapMagic::NanoSecondResolutionByteSwap as u32 {
+        } else if val == PcapMagic::NanoSecondResolutionByteSwap.into() {
             Some(PcapMagic::NanoSecondResolutionByteSwap)
         } else {
             None
         }
     }
+    /// Does the header information have the right endianness?
     fn need_byte_swap(self) -> bool {
         match self {
             PcapMagic::Normal => false,
@@ -106,6 +133,8 @@ impl PcapMagic {
             PcapMagic::NanoSecondResolutionByteSwap => true,
         }
     }
+    /// Are timestamps in nanosecond resolution?
+    /// true, if the timestamp has nanosecond resolution (as opposed to microsecond resolution)
     fn ns_res(self) -> bool {
         match self {
             PcapMagic::Normal => false,
@@ -121,14 +150,20 @@ impl From<PcapMagic> for u32 {
     }
 }
 
+/// Per-packet header data.
 #[derive(Packed)]
 pub struct PcapRecordHeader {
-    pub ts_sec : u32, /* timestamp seconds */
-    pub ts_usec : u32, /* timestamp microseconds */
-    pub incl_len : u32, /* number of octets of packet saved in file */
-    pub orig_len : u32, /* actual length of packet */
+    /// timestamp seconds
+    pub ts_sec : u32,
+    /// timestamp microseconds (or nanoseconds, depending on the header)
+    pub ts_usec : u32,
+    /// number of octets of packet saved in file
+    pub incl_len : u32,
+    /// actual length of packet
+    pub orig_len : u32,
 }
 impl PcapRecordHeader {
+    /// Swap the bytes according to the byte order defined in the file header.
     pub fn swap_bytes(&mut self, file_header: &PcapFileHeader) {
         if file_header.need_byte_swap {
             self.ts_sec.swap_bytes();
@@ -138,6 +173,7 @@ impl PcapRecordHeader {
         }
     }
 
+    /// Get the time and date of this packet.
     pub fn get_time(&self, file_header: &PcapFileHeader) -> Option<time::Timespec> {
         let nsec = if file_header.ns_res { self.ts_usec } else { self.ts_usec * 1000 } as i32;
         let utc_off : i64 = file_header.utc_offset.into();

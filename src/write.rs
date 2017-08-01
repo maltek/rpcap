@@ -23,7 +23,6 @@ pub struct PcapWriter<W : io::Write> {
     opts: WriteOptions,
 }
 
-
 impl<W : io::Write> PcapWriter<W> {
     /// Create a new `PcapWriter` that writes the packet capture data to the specified `Write`.
     pub fn new(mut writer: W, opts: WriteOptions) -> Result<Self, PcapError> {

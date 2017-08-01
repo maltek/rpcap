@@ -24,7 +24,7 @@ impl<R : io::Read> PcapReader<R> {
     /// Create a new `PcapReader` that reads the packet capture data from the specified `Reader`.
     pub fn new(mut reader: R) -> Result<Self, PcapError> {
         let fh = reader.unpack::<def::PcapFileHeaderInFile>()?;
-        let fh = def::PcapFileHeader::new(fh).ok_or(PcapError::InvalidFileHeader)?;
+        let fh = def::PcapFileHeader::try_from(fh).ok_or(PcapError::InvalidFileHeader)?;
 
         let buffer = vec![0; fh.snaplen.into()];
         Ok(PcapReader {
