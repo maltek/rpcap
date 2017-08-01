@@ -24,3 +24,6 @@ keywords = [
 time="0.1.35"
 bytepack = "0.4.1"
 bytepack_derive = "0.2.0"
+
+[dev-dependencies]
+rand = "0.3.16"
