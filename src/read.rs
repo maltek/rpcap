@@ -52,7 +52,8 @@ impl<R : io::Read> PcapReader<R> {
     /// to normal iterators. (The exact interface is unfortunately incompatible.)
     /// 
     /// Returns `Ok(None)` on EOF, or a packet as long as one is available.
-    pub fn next<'a>(&'a mut self) -> Result<Option<CapturedPacket<'a>>, PcapError> {
+    #[allow(should_implement_trait,unknown_lints)]
+    pub fn next(&mut self) -> Result<Option<CapturedPacket>, PcapError> {
         if self.state.is_none() {
             return Ok(None);
         }

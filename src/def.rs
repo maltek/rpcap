@@ -101,13 +101,13 @@ impl PcapFileHeader {
 #[derive(Copy,Clone)]
 enum PcapMagic {
     /// same byte order as in memory, timestamps with microsecond resolution
-    Normal = 0xa1b2c3d4,
+    Normal = 0xa1b2_c3d4,
     /// same byte order as in memory, timestamps with nanosecond resolution
-    NanoSecondResolution = 0xa1b23c4d,
+    NanoSecondResolution = 0xa1b2_3c4d,
     /// different byte order than in memory, timestamps with microsecond resolution
-    ByteSwap = 0xd4c3b2a1,
+    ByteSwap = 0xd4c3_b2a1,
     /// different byte order than in memory, timestamps with nanosecond resolution
-    NanoSecondResolutionByteSwap = 0x4d3cb2a1,
+    NanoSecondResolutionByteSwap = 0x4d3c_b2a1,
 }
 impl PcapMagic {
     /// Try to convert a `u32` to a `PcapMagic`.
@@ -127,20 +127,16 @@ impl PcapMagic {
     /// Does the header information have the right endianness?
     fn need_byte_swap(self) -> bool {
         match self {
-            PcapMagic::Normal => false,
-            PcapMagic::NanoSecondResolution => false,
-            PcapMagic::ByteSwap => true,
-            PcapMagic::NanoSecondResolutionByteSwap => true,
+            PcapMagic::Normal | PcapMagic::NanoSecondResolution => false,
+            PcapMagic::ByteSwap | PcapMagic::NanoSecondResolutionByteSwap => true,
         }
     }
     /// Are timestamps in nanosecond resolution?
     /// true, if the timestamp has nanosecond resolution (as opposed to microsecond resolution)
     fn ns_res(self) -> bool {
         match self {
-            PcapMagic::Normal => false,
-            PcapMagic::NanoSecondResolution => true,
-            PcapMagic::ByteSwap => false,
-            PcapMagic::NanoSecondResolutionByteSwap => true,
+            PcapMagic::Normal | PcapMagic::ByteSwap => false,
+            PcapMagic::NanoSecondResolution | PcapMagic::NanoSecondResolutionByteSwap => true,
         }
     }
 }
