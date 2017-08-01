@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["PcapWriter","The `PcapReader` struct allows reading packets from a packet capture."],["WriteOptions","The options for creating a new packet capture file."]]});

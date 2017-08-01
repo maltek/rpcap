@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Linktype` enum in crate `rpcap`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Linktype">
+
+    <title>rpcap::Linktype - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>rpcap</a></p><script>window.sidebarCurrent = {name: 'Linktype', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content enum">
+<h1 class='fqn'><span class='in-band'>Enum <a href='index.html'>rpcap</a>::<wbr><a class='enum' href=''>Linktype</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/rpcap/def.rs.html#198-307' title='goto source code'>[src]</a></span></h1>
+<pre class='rust enum'><div class="docblock attributes">#[repr(u32)]
+</div>pub enum Linktype {
+    NULL,
+    ETHERNET,
+    AX25,
+    IEEE802_5,
+    ARCNET_BSD,
+    SLIP,
+    PPP,
+    FDDI,
+    PPP_HDLC,
+    PPP_ETHER,
+    ATM_RFC1483,
+    RAW,
+    C_HDLC,
+    IEEE802_11,
+    FRELAY,
+    LOOP,
+    LINUX_SLL,
+    LTALK,
+    PFLOG,
+    IEEE802_11_PRISM,
+    IP_OVER_FC,
+    SUNATM,
+    IEEE802_11_RADIOTAP,
+    ARCNET_LINUX,
+    APPLE_IP_OVER_IEEE1394,
+    MTP2_WITH_PHDR,
+    MTP2,
+    MTP3,
+    SCCP,
+    DOCSIS,
+    LINUX_IRDA,
+    USER00_LINKTYPE,
+    USER01_LINKTYPE,
+    USER02_LINKTYPE,
+    USER03_LINKTYPE,
+    USER04_LINKTYPE,
+    USER05_LINKTYPE,
+    USER06_LINKTYPE,
+    USER07_LINKTYPE,
+    USER08_LINKTYPE,
+    USER09_LINKTYPE,
+    USER10_LINKTYPE,
+    USER11_LINKTYPE,
+    USER12_LINKTYPE,
+    USER13_LINKTYPE,
+    USER14_LINKTYPE,
+    USER15_LINKTYPE,
+    IEEE802_11_AVS,
+    BACNET_MS_TP,
+    PPP_PPPD,
+    GPRS_LLC,
+    GPF_T,
+    GPF_F,
+    LINUX_LAPD,
+    BLUETOOTH_HCI_H4,
+    USB_LINUX,
+    PPI,
+    IEEE802_15_4,
+    SITA,
+    ERF,
+    BLUETOOTH_HCI_H4_WITH_PHDR,
+    AX25_KISS,
+    LAPD,
+    PPP_WITH_DIR,
+    C_HDLC_WITH_DIR,
+    FRELAY_WITH_DIR,
+    IPMB_LINUX,
+    IEEE802_15_4_NONASK_PHY,
+    USB_LINUX_MMAPPED,
+    FC_2,
+    FC_2_WITH_FRAME_DELIMS,
+    IPNET,
+    CAN_SOCKETCAN,
+    IPV4,
+    IPV6,
+    IEEE802_15_4_NOFCS,
+    DBUS,
+    DVB_CI,
+    MUX27010,
+    STANAG_5066_D_PDU,
+    NFLOG,
+    NETANALYZER,
+    NETANALYZER_TRANSPARENT,
+    IPOIB,
+    MPEG_2_TS,
+    NG40,
+    NFC_LLCP,
+    INFINIBAND,
+    SCTP,
+    USBPCAP,
+    RTAC_SERIAL,
+    BLUETOOTH_LE_LL,
+    NETLINK,
+    BLUETOOTH_LINUX_MONITOR,
+    BLUETOOTH_BREDR_BB,
+    BLUETOOTH_LE_LL_WITH_PHDR,
+    PROFIBUS_DL,
+    PKTAP,
+    EPON,
+    IPMI_HPM_2,
+    ZWAVE_R1_R2,
+    ZWAVE_R3,
+    WATTSTOPPER_DLM,
+    ISO_14443,
+    RDS,
+    USB_DARWIN,
+}</pre><div class='docblock'><p>Known identifiers for the types of packets that might be captured in a <code>pcap</code> file. This tells
+you how to interpret the packets you receive.</p>
+
+<p>Look at <a href="http://www.tcpdump.org/linktypes.html">tcpdump.org</a> for the canonical list with
+descriptions.</p>
+</div><h2 class='variants'>Variants</h2>
+<span id='variant.NULL' class='variant'><span id='NULL.v' class='invisible'><code>NULL</code></span></span><span id='variant.ETHERNET' class='variant'><span id='ETHERNET.v' class='invisible'><code>ETHERNET</code></span></span><div class='docblock'><p>Ethernet packets</p>
+</div><span id='variant.AX25' class='variant'><span id='AX25.v' class='invisible'><code>AX25</code></span></span><span id='variant.IEEE802_5' class='variant'><span id='IEEE802_5.v' class='invisible'><code>IEEE802_5</code></span></span><span id='variant.ARCNET_BSD' class='variant'><span id='ARCNET_BSD.v' class='invisible'><code>ARCNET_BSD</code></span></span><span id='variant.SLIP' class='variant'><span id='SLIP.v' class='invisible'><code>SLIP</code></span></span><span id='variant.PPP' class='variant'><span id='PPP.v' class='invisible'><code>PPP</code></span></span><span id='variant.FDDI' class='variant'><span id='FDDI.v' class='invisible'><code>FDDI</code></span></span><span id='variant.PPP_HDLC' class='variant'><span id='PPP_HDLC.v' class='invisible'><code>PPP_HDLC</code></span></span><span id='variant.PPP_ETHER' class='variant'><span id='PPP_ETHER.v' class='invisible'><code>PPP_ETHER</code></span></span><span id='variant.ATM_RFC1483' class='variant'><span id='ATM_RFC1483.v' class='invisible'><code>ATM_RFC1483</code></span></span><span id='variant.RAW' class='variant'><span id='RAW.v' class='invisible'><code>RAW</code></span></span><div class='docblock'><p>IP packets (IPv4 or IPv6)</p>
+</div><span id='variant.C_HDLC' class='variant'><span id='C_HDLC.v' class='invisible'><code>C_HDLC</code></span></span><span id='variant.IEEE802_11' class='variant'><span id='IEEE802_11.v' class='invisible'><code>IEEE802_11</code></span></span><span id='variant.FRELAY' class='variant'><span id='FRELAY.v' class='invisible'><code>FRELAY</code></span></span><span id='variant.LOOP' class='variant'><span id='LOOP.v' class='invisible'><code>LOOP</code></span></span><span id='variant.LINUX_SLL' class='variant'><span id='LINUX_SLL.v' class='invisible'><code>LINUX_SLL</code></span></span><span id='variant.LTALK' class='variant'><span id='LTALK.v' class='invisible'><code>LTALK</code></span></span><span id='variant.PFLOG' class='variant'><span id='PFLOG.v' class='invisible'><code>PFLOG</code></span></span><span id='variant.IEEE802_11_PRISM' class='variant'><span id='IEEE802_11_PRISM.v' class='invisible'><code>IEEE802_11_PRISM</code></span></span><span id='variant.IP_OVER_FC' class='variant'><span id='IP_OVER_FC.v' class='invisible'><code>IP_OVER_FC</code></span></span><span id='variant.SUNATM' class='variant'><span id='SUNATM.v' class='invisible'><code>SUNATM</code></span></span><span id='variant.IEEE802_11_RADIOTAP' class='variant'><span id='IEEE802_11_RADIOTAP.v' class='invisible'><code>IEEE802_11_RADIOTAP</code></span></span><span id='variant.ARCNET_LINUX' class='variant'><span id='ARCNET_LINUX.v' class='invisible'><code>ARCNET_LINUX</code></span></span><span id='variant.APPLE_IP_OVER_IEEE1394' class='variant'><span id='APPLE_IP_OVER_IEEE1394.v' class='invisible'><code>APPLE_IP_OVER_IEEE1394</code></span></span><span id='variant.MTP2_WITH_PHDR' class='variant'><span id='MTP2_WITH_PHDR.v' class='invisible'><code>MTP2_WITH_PHDR</code></span></span><span id='variant.MTP2' class='variant'><span id='MTP2.v' class='invisible'><code>MTP2</code></span></span><span id='variant.MTP3' class='variant'><span id='MTP3.v' class='invisible'><code>MTP3</code></span></span><span id='variant.SCCP' class='variant'><span id='SCCP.v' class='invisible'><code>SCCP</code></span></span><span id='variant.DOCSIS' class='variant'><span id='DOCSIS.v' class='invisible'><code>DOCSIS</code></span></span><span id='variant.LINUX_IRDA' class='variant'><span id='LINUX_IRDA.v' class='invisible'><code>LINUX_IRDA</code></span></span><span id='variant.USER00_LINKTYPE' class='variant'><span id='USER00_LINKTYPE.v' class='invisible'><code>USER00_LINKTYPE</code></span></span><span id='variant.USER01_LINKTYPE' class='variant'><span id='USER01_LINKTYPE.v' class='invisible'><code>USER01_LINKTYPE</code></span></span><span id='variant.USER02_LINKTYPE' class='variant'><span id='USER02_LINKTYPE.v' class='invisible'><code>USER02_LINKTYPE</code></span></span><span id='variant.USER03_LINKTYPE' class='variant'><span id='USER03_LINKTYPE.v' class='invisible'><code>USER03_LINKTYPE</code></span></span><span id='variant.USER04_LINKTYPE' class='variant'><span id='USER04_LINKTYPE.v' class='invisible'><code>USER04_LINKTYPE</code></span></span><span id='variant.USER05_LINKTYPE' class='variant'><span id='USER05_LINKTYPE.v' class='invisible'><code>USER05_LINKTYPE</code></span></span><span id='variant.USER06_LINKTYPE' class='variant'><span id='USER06_LINKTYPE.v' class='invisible'><code>USER06_LINKTYPE</code></span></span><span id='variant.USER07_LINKTYPE' class='variant'><span id='USER07_LINKTYPE.v' class='invisible'><code>USER07_LINKTYPE</code></span></span><span id='variant.USER08_LINKTYPE' class='variant'><span id='USER08_LINKTYPE.v' class='invisible'><code>USER08_LINKTYPE</code></span></span><span id='variant.USER09_LINKTYPE' class='variant'><span id='USER09_LINKTYPE.v' class='invisible'><code>USER09_LINKTYPE</code></span></span><span id='variant.USER10_LINKTYPE' class='variant'><span id='USER10_LINKTYPE.v' class='invisible'><code>USER10_LINKTYPE</code></span></span><span id='variant.USER11_LINKTYPE' class='variant'><span id='USER11_LINKTYPE.v' class='invisible'><code>USER11_LINKTYPE</code></span></span><span id='variant.USER12_LINKTYPE' class='variant'><span id='USER12_LINKTYPE.v' class='invisible'><code>USER12_LINKTYPE</code></span></span><span id='variant.USER13_LINKTYPE' class='variant'><span id='USER13_LINKTYPE.v' class='invisible'><code>USER13_LINKTYPE</code></span></span><span id='variant.USER14_LINKTYPE' class='variant'><span id='USER14_LINKTYPE.v' class='invisible'><code>USER14_LINKTYPE</code></span></span><span id='variant.USER15_LINKTYPE' class='variant'><span id='USER15_LINKTYPE.v' class='invisible'><code>USER15_LINKTYPE</code></span></span><span id='variant.IEEE802_11_AVS' class='variant'><span id='IEEE802_11_AVS.v' class='invisible'><code>IEEE802_11_AVS</code></span></span><span id='variant.BACNET_MS_TP' class='variant'><span id='BACNET_MS_TP.v' class='invisible'><code>BACNET_MS_TP</code></span></span><span id='variant.PPP_PPPD' class='variant'><span id='PPP_PPPD.v' class='invisible'><code>PPP_PPPD</code></span></span><span id='variant.GPRS_LLC' class='variant'><span id='GPRS_LLC.v' class='invisible'><code>GPRS_LLC</code></span></span><span id='variant.GPF_T' class='variant'><span id='GPF_T.v' class='invisible'><code>GPF_T</code></span></span><span id='variant.GPF_F' class='variant'><span id='GPF_F.v' class='invisible'><code>GPF_F</code></span></span><span id='variant.LINUX_LAPD' class='variant'><span id='LINUX_LAPD.v' class='invisible'><code>LINUX_LAPD</code></span></span><span id='variant.BLUETOOTH_HCI_H4' class='variant'><span id='BLUETOOTH_HCI_H4.v' class='invisible'><code>BLUETOOTH_HCI_H4</code></span></span><span id='variant.USB_LINUX' class='variant'><span id='USB_LINUX.v' class='invisible'><code>USB_LINUX</code></span></span><span id='variant.PPI' class='variant'><span id='PPI.v' class='invisible'><code>PPI</code></span></span><span id='variant.IEEE802_15_4' class='variant'><span id='IEEE802_15_4.v' class='invisible'><code>IEEE802_15_4</code></span></span><span id='variant.SITA' class='variant'><span id='SITA.v' class='invisible'><code>SITA</code></span></span><span id='variant.ERF' class='variant'><span id='ERF.v' class='invisible'><code>ERF</code></span></span><span id='variant.BLUETOOTH_HCI_H4_WITH_PHDR' class='variant'><span id='BLUETOOTH_HCI_H4_WITH_PHDR.v' class='invisible'><code>BLUETOOTH_HCI_H4_WITH_PHDR</code></span></span><span id='variant.AX25_KISS' class='variant'><span id='AX25_KISS.v' class='invisible'><code>AX25_KISS</code></span></span><span id='variant.LAPD' class='variant'><span id='LAPD.v' class='invisible'><code>LAPD</code></span></span><span id='variant.PPP_WITH_DIR' class='variant'><span id='PPP_WITH_DIR.v' class='invisible'><code>PPP_WITH_DIR</code></span></span><span id='variant.C_HDLC_WITH_DIR' class='variant'><span id='C_HDLC_WITH_DIR.v' class='invisible'><code>C_HDLC_WITH_DIR</code></span></span><span id='variant.FRELAY_WITH_DIR' class='variant'><span id='FRELAY_WITH_DIR.v' class='invisible'><code>FRELAY_WITH_DIR</code></span></span><span id='variant.IPMB_LINUX' class='variant'><span id='IPMB_LINUX.v' class='invisible'><code>IPMB_LINUX</code></span></span><span id='variant.IEEE802_15_4_NONASK_PHY' class='variant'><span id='IEEE802_15_4_NONASK_PHY.v' class='invisible'><code>IEEE802_15_4_NONASK_PHY</code></span></span><span id='variant.USB_LINUX_MMAPPED' class='variant'><span id='USB_LINUX_MMAPPED.v' class='invisible'><code>USB_LINUX_MMAPPED</code></span></span><span id='variant.FC_2' class='variant'><span id='FC_2.v' class='invisible'><code>FC_2</code></span></span><span id='variant.FC_2_WITH_FRAME_DELIMS' class='variant'><span id='FC_2_WITH_FRAME_DELIMS.v' class='invisible'><code>FC_2_WITH_FRAME_DELIMS</code></span></span><span id='variant.IPNET' class='variant'><span id='IPNET.v' class='invisible'><code>IPNET</code></span></span><span id='variant.CAN_SOCKETCAN' class='variant'><span id='CAN_SOCKETCAN.v' class='invisible'><code>CAN_SOCKETCAN</code></span></span><span id='variant.IPV4' class='variant'><span id='IPV4.v' class='invisible'><code>IPV4</code></span></span><span id='variant.IPV6' class='variant'><span id='IPV6.v' class='invisible'><code>IPV6</code></span></span><span id='variant.IEEE802_15_4_NOFCS' class='variant'><span id='IEEE802_15_4_NOFCS.v' class='invisible'><code>IEEE802_15_4_NOFCS</code></span></span><span id='variant.DBUS' class='variant'><span id='DBUS.v' class='invisible'><code>DBUS</code></span></span><span id='variant.DVB_CI' class='variant'><span id='DVB_CI.v' class='invisible'><code>DVB_CI</code></span></span><span id='variant.MUX27010' class='variant'><span id='MUX27010.v' class='invisible'><code>MUX27010</code></span></span><span id='variant.STANAG_5066_D_PDU' class='variant'><span id='STANAG_5066_D_PDU.v' class='invisible'><code>STANAG_5066_D_PDU</code></span></span><span id='variant.NFLOG' class='variant'><span id='NFLOG.v' class='invisible'><code>NFLOG</code></span></span><span id='variant.NETANALYZER' class='variant'><span id='NETANALYZER.v' class='invisible'><code>NETANALYZER</code></span></span><span id='variant.NETANALYZER_TRANSPARENT' class='variant'><span id='NETANALYZER_TRANSPARENT.v' class='invisible'><code>NETANALYZER_TRANSPARENT</code></span></span><span id='variant.IPOIB' class='variant'><span id='IPOIB.v' class='invisible'><code>IPOIB</code></span></span><span id='variant.MPEG_2_TS' class='variant'><span id='MPEG_2_TS.v' class='invisible'><code>MPEG_2_TS</code></span></span><span id='variant.NG40' class='variant'><span id='NG40.v' class='invisible'><code>NG40</code></span></span><span id='variant.NFC_LLCP' class='variant'><span id='NFC_LLCP.v' class='invisible'><code>NFC_LLCP</code></span></span><span id='variant.INFINIBAND' class='variant'><span id='INFINIBAND.v' class='invisible'><code>INFINIBAND</code></span></span><span id='variant.SCTP' class='variant'><span id='SCTP.v' class='invisible'><code>SCTP</code></span></span><span id='variant.USBPCAP' class='variant'><span id='USBPCAP.v' class='invisible'><code>USBPCAP</code></span></span><span id='variant.RTAC_SERIAL' class='variant'><span id='RTAC_SERIAL.v' class='invisible'><code>RTAC_SERIAL</code></span></span><span id='variant.BLUETOOTH_LE_LL' class='variant'><span id='BLUETOOTH_LE_LL.v' class='invisible'><code>BLUETOOTH_LE_LL</code></span></span><span id='variant.NETLINK' class='variant'><span id='NETLINK.v' class='invisible'><code>NETLINK</code></span></span><span id='variant.BLUETOOTH_LINUX_MONITOR' class='variant'><span id='BLUETOOTH_LINUX_MONITOR.v' class='invisible'><code>BLUETOOTH_LINUX_MONITOR</code></span></span><span id='variant.BLUETOOTH_BREDR_BB' class='variant'><span id='BLUETOOTH_BREDR_BB.v' class='invisible'><code>BLUETOOTH_BREDR_BB</code></span></span><span id='variant.BLUETOOTH_LE_LL_WITH_PHDR' class='variant'><span id='BLUETOOTH_LE_LL_WITH_PHDR.v' class='invisible'><code>BLUETOOTH_LE_LL_WITH_PHDR</code></span></span><span id='variant.PROFIBUS_DL' class='variant'><span id='PROFIBUS_DL.v' class='invisible'><code>PROFIBUS_DL</code></span></span><span id='variant.PKTAP' class='variant'><span id='PKTAP.v' class='invisible'><code>PKTAP</code></span></span><span id='variant.EPON' class='variant'><span id='EPON.v' class='invisible'><code>EPON</code></span></span><span id='variant.IPMI_HPM_2' class='variant'><span id='IPMI_HPM_2.v' class='invisible'><code>IPMI_HPM_2</code></span></span><span id='variant.ZWAVE_R1_R2' class='variant'><span id='ZWAVE_R1_R2.v' class='invisible'><code>ZWAVE_R1_R2</code></span></span><span id='variant.ZWAVE_R3' class='variant'><span id='ZWAVE_R3.v' class='invisible'><code>ZWAVE_R3</code></span></span><span id='variant.WATTSTOPPER_DLM' class='variant'><span id='WATTSTOPPER_DLM.v' class='invisible'><code>WATTSTOPPER_DLM</code></span></span><span id='variant.ISO_14443' class='variant'><span id='ISO_14443.v' class='invisible'><code>ISO_14443</code></span></span><span id='variant.RDS' class='variant'><span id='RDS.v' class='invisible'><code>RDS</code></span></span><span id='variant.USB_DARWIN' class='variant'><span id='USB_DARWIN.v' class='invisible'><code>USB_DARWIN</code></span></span><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../rpcap/enum.Linktype.html' title='rpcap::Linktype'>Linktype</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/def.rs.html#195' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='enum' href='../rpcap/enum.Linktype.html' title='rpcap::Linktype'>Linktype</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/def.rs.html#195' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='enum' href='../rpcap/enum.Linktype.html' title='rpcap::Linktype'>Linktype</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "rpcap";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
