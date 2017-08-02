@@ -1,6 +1,6 @@
 [package]
 name = "rpcap"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Malte Kraus <git@maltekraus.de>"]
 repository = "https://github.com/maltek/rpcap"
 documentation = "https://maltek.github.io/rpcap/rpcap/"
@@ -27,3 +27,6 @@ bytepack_derive = "0.2.0"
 
 [dev-dependencies]
 rand = "0.3.16"
+
+[badges]
+travis-ci = { repository = "maltek/rpcap", branch = "master" }

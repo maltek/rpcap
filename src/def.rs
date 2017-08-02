@@ -4,6 +4,7 @@ use bytepack::Packed;
 
 /// The serialized file header data.
 #[derive(Packed)]
+#[repr(packed)]
 pub struct PcapFileHeaderInFile {
     /// magic number
     pub magic_num: u32,
@@ -148,6 +149,7 @@ impl From<PcapMagic> for u32 {
 
 /// Per-packet header data.
 #[derive(Packed)]
+#[repr(packed)]
 pub struct PcapRecordHeader {
     /// timestamp seconds
     pub ts_sec : u32,
