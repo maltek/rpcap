@@ -9,6 +9,7 @@
 
     <title>rpcap::read::PcapReader - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>read</a></p><script>window.sidebarCurrent = {name: 'PcapReader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct PcapReader</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>read</a></p><script>window.sidebarCurrent = {name: 'PcapReader', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,22 +43,22 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>read</a>::<wbr><a class='struct' href=''>PcapReader</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>read</a>::<wbr><a class="struct" href=''>PcapReader</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../../src/rpcap/read.rs.html#11-15' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct PcapReader&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>The <code>PcapReader</code> struct allows reading packets from a packet capture.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a>&gt; <a class='struct' href='../../rpcap/read/struct.PcapReader.html' title='rpcap::read::PcapReader'>PcapReader</a>&lt;R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rpcap/read.rs.html#23-97' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(reader: R) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, <a class='enum' href='../../rpcap/enum.PcapError.html' title='rpcap::PcapError'>PcapError</a>&gt;</code></span></h4>
+<pre class='rust struct'>pub struct PcapReader&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>The <code>PcapReader</code> struct allows reading packets from a packet capture.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>&gt; <a class="struct" href="../../rpcap/read/struct.PcapReader.html" title="struct rpcap::read::PcapReader">PcapReader</a>&lt;R&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rpcap/read.rs.html#23-98' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(reader: R) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="../../rpcap/enum.PcapError.html" title="enum rpcap::PcapError">PcapError</a>&gt;</code></span></h4>
 <div class='docblock'><p>Create a new <code>PcapReader</code> that reads the packet capture data from the specified <code>Reader</code>.</p>
-</div><h4 id='method.get_linktype' class='method'><span id='get_linktype.v' class='invisible'><code>fn <a href='#method.get_linktype' class='fnname'>get_linktype</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a></code></span></h4>
+</div><h4 id='method.get_linktype' class="method"><span id='get_linktype.v' class='invisible'><code>fn <a href='#method.get_linktype' class='fnname'>get_linktype</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></h4>
 <div class='docblock'><p>Returns the link type of this packet capture. See <code>Linktype</code> for the known values.</p>
-</div><h4 id='method.get_snaplen' class='method'><span id='get_snaplen.v' class='invisible'><code>fn <a href='#method.get_snaplen' class='fnname'>get_snaplen</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h4>
+</div><h4 id='method.get_snaplen' class="method"><span id='get_snaplen.v' class='invisible'><code>fn <a href='#method.get_snaplen' class='fnname'>get_snaplen</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></h4>
 <div class='docblock'><p>Returns the maximum packet size. Packets larger than this usually get truncated to this
 size by the recording application.</p>
-</div><h4 id='method.next' class='method'><span id='next.v' class='invisible'><code>fn <a href='#method.next' class='fnname'>next</a>&lt;'a&gt;(&amp;'a mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../rpcap/struct.CapturedPacket.html' title='rpcap::CapturedPacket'>CapturedPacket</a>&lt;'a&gt;&gt;, <a class='enum' href='../../rpcap/enum.PcapError.html' title='rpcap::PcapError'>PcapError</a>&gt;</code></span></h4>
+</div><h4 id='method.next' class="method"><span id='next.v' class='invisible'><code>fn <a href='#method.next' class='fnname'>next</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&gt;, <a class="enum" href="../../rpcap/enum.PcapError.html" title="enum rpcap::PcapError">PcapError</a>&gt;</code></span></h4>
 <div class='docblock'><p>This function allows iterating over the packets in the packet capture, in a similar fashion
 to normal iterators. (The exact interface is unfortunately incompatible.)</p>
 
@@ -119,7 +120,6 @@ to normal iterators. (The exact interface is unfortunately incompatible.)</p>
         window.rootPath = "../../";
         window.currentCrate = "rpcap";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

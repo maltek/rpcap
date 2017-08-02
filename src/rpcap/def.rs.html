@@ -9,6 +9,7 @@
 
     <title>def.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -42,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -352,319 +353,315 @@
 <span id="308">308</span>
 <span id="309">309</span>
 <span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>time</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">time</span>;
 
-<span class='kw'>use</span> <span class='ident'>bytepack</span>::<span class='ident'>Packed</span>;
+<span class="kw">use</span> <span class="ident">bytepack</span>::<span class="ident">Packed</span>;
 
-<span class='doccomment'>/// The serialized file header data.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Packed</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PcapFileHeaderInFile</span> {
-    <span class='doccomment'>/// magic number</span>
-    <span class='kw'>pub</span> <span class='ident'>magic_num</span>: <span class='ident'>u32</span>,
-    <span class='doccomment'>/// major version number</span>
-    <span class='kw'>pub</span> <span class='ident'>version_major</span> : <span class='ident'>u16</span>,
-    <span class='doccomment'>/// minor version number</span>
-    <span class='kw'>pub</span> <span class='ident'>version_minor</span> : <span class='ident'>u16</span>,
-    <span class='doccomment'>/// GMT to local correction</span>
-    <span class='kw'>pub</span> <span class='ident'>thiszone</span> : <span class='ident'>i32</span>,
-    <span class='doccomment'>/// accuracy of timestamps</span>
-    <span class='kw'>pub</span> <span class='ident'>sigfigs</span> : <span class='ident'>u32</span>,
-    <span class='doccomment'>/// max length of captured packets, in octets */</span>
-    <span class='kw'>pub</span> <span class='ident'>snaplen</span> : <span class='ident'>u32</span>,
-    <span class='doccomment'>/// data link type</span>
-    <span class='kw'>pub</span> <span class='ident'>network</span> : <span class='ident'>u32</span>,
+<span class="doccomment">/// The serialized file header data.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PcapFileHeaderInFile</span> {
+    <span class="doccomment">/// magic number</span>
+    <span class="kw">pub</span> <span class="ident">magic_num</span>: <span class="ident">u32</span>,
+    <span class="doccomment">/// major version number</span>
+    <span class="kw">pub</span> <span class="ident">version_major</span> : <span class="ident">u16</span>,
+    <span class="doccomment">/// minor version number</span>
+    <span class="kw">pub</span> <span class="ident">version_minor</span> : <span class="ident">u16</span>,
+    <span class="doccomment">/// GMT to local correction</span>
+    <span class="kw">pub</span> <span class="ident">thiszone</span> : <span class="ident">i32</span>,
+    <span class="doccomment">/// accuracy of timestamps</span>
+    <span class="kw">pub</span> <span class="ident">sigfigs</span> : <span class="ident">u32</span>,
+    <span class="doccomment">/// max length of captured packets, in octets */</span>
+    <span class="kw">pub</span> <span class="ident">snaplen</span> : <span class="ident">u32</span>,
+    <span class="doccomment">/// data link type</span>
+    <span class="kw">pub</span> <span class="ident">network</span> : <span class="ident">u32</span>,
 }
 
-<span class='doccomment'>/// only supported major version</span>
-<span class='kw'>const</span> <span class='ident'>PCAP_VERSION_MAJOR</span> : <span class='ident'>u16</span> <span class='op'>=</span> <span class='number'>2</span>;
-<span class='doccomment'>/// only supported minor version</span>
-<span class='kw'>const</span> <span class='ident'>PCAP_VERSION_MINOR</span> : <span class='ident'>u16</span> <span class='op'>=</span> <span class='number'>4</span>;
+<span class="doccomment">/// only supported major version</span>
+<span class="kw">const</span> <span class="ident">PCAP_VERSION_MAJOR</span> : <span class="ident">u16</span> <span class="op">=</span> <span class="number">2</span>;
+<span class="doccomment">/// only supported minor version</span>
+<span class="kw">const</span> <span class="ident">PCAP_VERSION_MINOR</span> : <span class="ident">u16</span> <span class="op">=</span> <span class="number">4</span>;
 
-<span class='kw'>impl</span> <span class='ident'>PcapFileHeaderInFile</span> {
-    <span class='doccomment'>/// Creates a new file header based on snap length and link type.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>snaplen</span>: <span class='ident'>usize</span>, <span class='ident'>linktype</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PcapFileHeaderInFile</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>snap</span> <span class='op'>=</span> <span class='ident'>snaplen</span> <span class='kw'>as</span> <span class='ident'>u32</span>;
-        <span class='kw'>if</span> <span class='ident'>snap</span> <span class='kw'>as</span> <span class='ident'>usize</span> <span class='op'>!=</span> <span class='ident'>snaplen</span> {
-            <span class='prelude-val'>None</span>
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>PcapFileHeaderInFile</span> {
-                <span class='ident'>magic_num</span>: <span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolution</span>.<span class='ident'>into</span>(),
-                <span class='ident'>version_major</span>: <span class='ident'>PCAP_VERSION_MAJOR</span>,
-                <span class='ident'>version_minor</span>: <span class='ident'>PCAP_VERSION_MINOR</span>,
-                <span class='ident'>thiszone</span>: <span class='number'>0</span>,
-                <span class='ident'>sigfigs</span>: <span class='number'>0</span>,
-                <span class='ident'>snaplen</span>: <span class='ident'>snap</span>,
-                <span class='ident'>network</span>: <span class='ident'>linktype</span>,
+<span class="kw">impl</span> <span class="ident">PcapFileHeaderInFile</span> {
+    <span class="doccomment">/// Creates a new file header based on snap length and link type.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">snaplen</span>: <span class="ident">usize</span>, <span class="ident">linktype</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PcapFileHeaderInFile</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">snap</span> <span class="op">=</span> <span class="ident">snaplen</span> <span class="kw">as</span> <span class="ident">u32</span>;
+        <span class="kw">if</span> <span class="ident">snap</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">!=</span> <span class="ident">snaplen</span> {
+            <span class="prelude-val">None</span>
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">PcapFileHeaderInFile</span> {
+                <span class="ident">magic_num</span>: <span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolution</span>.<span class="ident">into</span>(),
+                <span class="ident">version_major</span>: <span class="ident">PCAP_VERSION_MAJOR</span>,
+                <span class="ident">version_minor</span>: <span class="ident">PCAP_VERSION_MINOR</span>,
+                <span class="ident">thiszone</span>: <span class="number">0</span>,
+                <span class="ident">sigfigs</span>: <span class="number">0</span>,
+                <span class="ident">snaplen</span>: <span class="ident">snap</span>,
+                <span class="ident">network</span>: <span class="ident">linktype</span>,
             })
         }
     }
 }
 
-<span class='doccomment'>/// Fully parsed file header data.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PcapFileHeader</span> {
-    <span class='doccomment'>/// `true`, if the timestamp has nanosecond resolution (as opposed to microsecond resolution)</span>
-    <span class='kw'>pub</span> <span class='ident'>ns_res</span>: <span class='ident'>bool</span>,
-    <span class='doccomment'>/// `true`, if header values need to be byte swapped when they are read from the file</span>
-    <span class='kw'>pub</span> <span class='ident'>need_byte_swap</span>: <span class='ident'>bool</span>,
-    <span class='doccomment'>/// The datalink type.</span>
-    <span class='kw'>pub</span> <span class='ident'>network</span> : <span class='ident'>u32</span>,
-    <span class='doccomment'>/// The UTC offset of the timestamps.</span>
-    <span class='kw'>pub</span> <span class='ident'>utc_offset</span> : <span class='ident'>i32</span>,
-    <span class='doccomment'>/// The maximum size of pactured packets.</span>
-    <span class='kw'>pub</span> <span class='ident'>snaplen</span> : <span class='ident'>usize</span>,
+<span class="doccomment">/// Fully parsed file header data.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PcapFileHeader</span> {
+    <span class="doccomment">/// `true`, if the timestamp has nanosecond resolution (as opposed to microsecond resolution)</span>
+    <span class="kw">pub</span> <span class="ident">ns_res</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// `true`, if header values need to be byte swapped when they are read from the file</span>
+    <span class="kw">pub</span> <span class="ident">need_byte_swap</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// The datalink type.</span>
+    <span class="kw">pub</span> <span class="ident">network</span> : <span class="ident">u32</span>,
+    <span class="doccomment">/// The UTC offset of the timestamps.</span>
+    <span class="kw">pub</span> <span class="ident">utc_offset</span> : <span class="ident">i32</span>,
+    <span class="doccomment">/// The maximum size of pactured packets.</span>
+    <span class="kw">pub</span> <span class="ident">snaplen</span> : <span class="ident">usize</span>,
 }
-<span class='kw'>impl</span> <span class='ident'>PcapFileHeader</span> {
-    <span class='doccomment'>/// Parse header data from file.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try_from</span>(<span class='ident'>header</span>: <span class='ident'>PcapFileHeaderInFile</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>magic</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>m</span>) <span class='op'>=</span> <span class='ident'>PcapMagic</span>::<span class='ident'>try_from</span>(<span class='ident'>header</span>.<span class='ident'>magic_num</span>) { <span class='ident'>m</span> } <span class='kw'>else</span> { <span class='kw'>return</span> <span class='prelude-val'>None</span>; };
+<span class="kw">impl</span> <span class="ident">PcapFileHeader</span> {
+    <span class="doccomment">/// Parse header data from file.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">header</span>: <span class="ident">PcapFileHeaderInFile</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">magic</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">PcapMagic</span>::<span class="ident">try_from</span>(<span class="ident">header</span>.<span class="ident">magic_num</span>) { <span class="ident">m</span> } <span class="kw">else</span> { <span class="kw">return</span> <span class="prelude-val">None</span>; };
 
-        <span class='kw'>if</span> <span class='ident'>magic</span>.<span class='ident'>need_byte_swap</span>() {
-            <span class='ident'>header</span>.<span class='ident'>version_major</span>.<span class='ident'>swap_bytes</span>();
-            <span class='ident'>header</span>.<span class='ident'>version_minor</span>.<span class='ident'>swap_bytes</span>();
-            <span class='ident'>header</span>.<span class='ident'>thiszone</span>.<span class='ident'>swap_bytes</span>();
-            <span class='ident'>header</span>.<span class='ident'>sigfigs</span>.<span class='ident'>swap_bytes</span>();
-            <span class='ident'>header</span>.<span class='ident'>snaplen</span>.<span class='ident'>swap_bytes</span>();
-            <span class='ident'>header</span>.<span class='ident'>network</span>.<span class='ident'>swap_bytes</span>();
+        <span class="kw">if</span> <span class="ident">magic</span>.<span class="ident">need_byte_swap</span>() {
+            <span class="ident">header</span>.<span class="ident">version_major</span>.<span class="ident">swap_bytes</span>();
+            <span class="ident">header</span>.<span class="ident">version_minor</span>.<span class="ident">swap_bytes</span>();
+            <span class="ident">header</span>.<span class="ident">thiszone</span>.<span class="ident">swap_bytes</span>();
+            <span class="ident">header</span>.<span class="ident">sigfigs</span>.<span class="ident">swap_bytes</span>();
+            <span class="ident">header</span>.<span class="ident">snaplen</span>.<span class="ident">swap_bytes</span>();
+            <span class="ident">header</span>.<span class="ident">network</span>.<span class="ident">swap_bytes</span>();
         }
 
-        <span class='kw'>let</span> <span class='ident'>snaplen</span> <span class='op'>=</span> <span class='ident'>header</span>.<span class='ident'>snaplen</span> <span class='kw'>as</span> <span class='ident'>usize</span>;
-        <span class='kw'>if</span> <span class='ident'>snaplen</span> <span class='kw'>as</span> <span class='ident'>u32</span> <span class='op'>!=</span> <span class='ident'>header</span>.<span class='ident'>snaplen</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>None</span>;
+        <span class="kw">let</span> <span class="ident">snaplen</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">snaplen</span> <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">if</span> <span class="ident">snaplen</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">!=</span> <span class="ident">header</span>.<span class="ident">snaplen</span> {
+            <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class='comment'>// docs say this version number hasn&#39;t changed since 1998, so this simplistic comparison</span>
-        <span class='comment'>// should suffice</span>
-        <span class='kw'>if</span> <span class='ident'>header</span>.<span class='ident'>version_major</span> <span class='op'>==</span> <span class='ident'>PCAP_VERSION_MAJOR</span> <span class='op'>&amp;&amp;</span> <span class='ident'>header</span>.<span class='ident'>version_minor</span> <span class='op'>==</span> <span class='ident'>PCAP_VERSION_MINOR</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>PcapFileHeader</span> {
-                <span class='ident'>ns_res</span>: <span class='ident'>magic</span>.<span class='ident'>ns_res</span>(),
-                <span class='ident'>need_byte_swap</span>: <span class='ident'>magic</span>.<span class='ident'>need_byte_swap</span>(),
-                <span class='ident'>network</span>: <span class='ident'>header</span>.<span class='ident'>network</span>,
-                <span class='ident'>utc_offset</span>: <span class='ident'>header</span>.<span class='ident'>thiszone</span>,
-                <span class='ident'>snaplen</span>: <span class='ident'>snaplen</span>,
+        <span class="comment">// docs say this version number hasn&#39;t changed since 1998, so this simplistic comparison</span>
+        <span class="comment">// should suffice</span>
+        <span class="kw">if</span> <span class="ident">header</span>.<span class="ident">version_major</span> <span class="op">==</span> <span class="ident">PCAP_VERSION_MAJOR</span> <span class="op">&amp;&amp;</span> <span class="ident">header</span>.<span class="ident">version_minor</span> <span class="op">==</span> <span class="ident">PCAP_VERSION_MINOR</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">PcapFileHeader</span> {
+                <span class="ident">ns_res</span>: <span class="ident">magic</span>.<span class="ident">ns_res</span>(),
+                <span class="ident">need_byte_swap</span>: <span class="ident">magic</span>.<span class="ident">need_byte_swap</span>(),
+                <span class="ident">network</span>: <span class="ident">header</span>.<span class="ident">network</span>,
+                <span class="ident">utc_offset</span>: <span class="ident">header</span>.<span class="ident">thiszone</span>,
+                <span class="ident">snaplen</span>: <span class="ident">snaplen</span>,
             })
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         }
     }
 }
 
 
-<span class='doccomment'>/// The different magic numbers for PCAP files.</span>
-<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u32</span>)]</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>,<span class='ident'>Clone</span>)]</span>
-<span class='kw'>enum</span> <span class='ident'>PcapMagic</span> {
-    <span class='doccomment'>/// same byte order as in memory, timestamps with microsecond resolution</span>
-    <span class='ident'>Normal</span> <span class='op'>=</span> <span class='number'>0xa1b2c3d4</span>,
-    <span class='doccomment'>/// same byte order as in memory, timestamps with nanosecond resolution</span>
-    <span class='ident'>NanoSecondResolution</span> <span class='op'>=</span> <span class='number'>0xa1b23c4d</span>,
-    <span class='doccomment'>/// different byte order than in memory, timestamps with microsecond resolution</span>
-    <span class='ident'>ByteSwap</span> <span class='op'>=</span> <span class='number'>0xd4c3b2a1</span>,
-    <span class='doccomment'>/// different byte order than in memory, timestamps with nanosecond resolution</span>
-    <span class='ident'>NanoSecondResolutionByteSwap</span> <span class='op'>=</span> <span class='number'>0x4d3cb2a1</span>,
+<span class="doccomment">/// The different magic numbers for PCAP files.</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u32</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>,<span class="ident">Clone</span>)]</span>
+<span class="kw">enum</span> <span class="ident">PcapMagic</span> {
+    <span class="doccomment">/// same byte order as in memory, timestamps with microsecond resolution</span>
+    <span class="ident">Normal</span> <span class="op">=</span> <span class="number">0xa1b2_c3d4</span>,
+    <span class="doccomment">/// same byte order as in memory, timestamps with nanosecond resolution</span>
+    <span class="ident">NanoSecondResolution</span> <span class="op">=</span> <span class="number">0xa1b2_3c4d</span>,
+    <span class="doccomment">/// different byte order than in memory, timestamps with microsecond resolution</span>
+    <span class="ident">ByteSwap</span> <span class="op">=</span> <span class="number">0xd4c3_b2a1</span>,
+    <span class="doccomment">/// different byte order than in memory, timestamps with nanosecond resolution</span>
+    <span class="ident">NanoSecondResolutionByteSwap</span> <span class="op">=</span> <span class="number">0x4d3c_b2a1</span>,
 }
-<span class='kw'>impl</span> <span class='ident'>PcapMagic</span> {
-    <span class='doccomment'>/// Try to convert a `u32` to a `PcapMagic`.</span>
-    <span class='kw'>fn</span> <span class='ident'>try_from</span>(<span class='ident'>val</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>PcapMagic</span><span class='op'>&gt;</span> {
-        <span class='kw'>if</span> <span class='ident'>val</span> <span class='op'>==</span> <span class='ident'>PcapMagic</span>::<span class='ident'>Normal</span>.<span class='ident'>into</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>PcapMagic</span>::<span class='ident'>Normal</span>)
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>val</span> <span class='op'>==</span> <span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolution</span>.<span class='ident'>into</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolution</span>)
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>val</span> <span class='op'>==</span> <span class='ident'>PcapMagic</span>::<span class='ident'>ByteSwap</span>.<span class='ident'>into</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>PcapMagic</span>::<span class='ident'>ByteSwap</span>)
-        } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>val</span> <span class='op'>==</span> <span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolutionByteSwap</span>.<span class='ident'>into</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolutionByteSwap</span>)
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+<span class="kw">impl</span> <span class="ident">PcapMagic</span> {
+    <span class="doccomment">/// Try to convert a `u32` to a `PcapMagic`.</span>
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">val</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PcapMagic</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">val</span> <span class="op">==</span> <span class="ident">PcapMagic</span>::<span class="ident">Normal</span>.<span class="ident">into</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">PcapMagic</span>::<span class="ident">Normal</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">val</span> <span class="op">==</span> <span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolution</span>.<span class="ident">into</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolution</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">val</span> <span class="op">==</span> <span class="ident">PcapMagic</span>::<span class="ident">ByteSwap</span>.<span class="ident">into</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">PcapMagic</span>::<span class="ident">ByteSwap</span>)
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">val</span> <span class="op">==</span> <span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolutionByteSwap</span>.<span class="ident">into</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolutionByteSwap</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         }
     }
-    <span class='doccomment'>/// Does the header information have the right endianness?</span>
-    <span class='kw'>fn</span> <span class='ident'>need_byte_swap</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='self'>self</span> {
-            <span class='ident'>PcapMagic</span>::<span class='ident'>Normal</span> <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-            <span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolution</span> <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-            <span class='ident'>PcapMagic</span>::<span class='ident'>ByteSwap</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
-            <span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolutionByteSwap</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+    <span class="doccomment">/// Does the header information have the right endianness?</span>
+    <span class="kw">fn</span> <span class="ident">need_byte_swap</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">PcapMagic</span>::<span class="ident">Normal</span> <span class="op">|</span> <span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolution</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">PcapMagic</span>::<span class="ident">ByteSwap</span> <span class="op">|</span> <span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolutionByteSwap</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
         }
     }
-    <span class='doccomment'>/// Are timestamps in nanosecond resolution?</span>
-    <span class='doccomment'>/// true, if the timestamp has nanosecond resolution (as opposed to microsecond resolution)</span>
-    <span class='kw'>fn</span> <span class='ident'>ns_res</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='self'>self</span> {
-            <span class='ident'>PcapMagic</span>::<span class='ident'>Normal</span> <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-            <span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolution</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
-            <span class='ident'>PcapMagic</span>::<span class='ident'>ByteSwap</span> <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-            <span class='ident'>PcapMagic</span>::<span class='ident'>NanoSecondResolutionByteSwap</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
+    <span class="doccomment">/// Are timestamps in nanosecond resolution?</span>
+    <span class="doccomment">/// true, if the timestamp has nanosecond resolution (as opposed to microsecond resolution)</span>
+    <span class="kw">fn</span> <span class="ident">ns_res</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span> {
+            <span class="ident">PcapMagic</span>::<span class="ident">Normal</span> <span class="op">|</span> <span class="ident">PcapMagic</span>::<span class="ident">ByteSwap</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolution</span> <span class="op">|</span> <span class="ident">PcapMagic</span>::<span class="ident">NanoSecondResolutionByteSwap</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
         }
     }
 }
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>PcapMagic</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>u32</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>val</span>: <span class='ident'>PcapMagic</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='ident'>val</span> <span class='kw'>as</span> <span class='ident'>u32</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PcapMagic</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="ident">PcapMagic</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="ident">val</span> <span class="kw">as</span> <span class="ident">u32</span>
     }
 }
 
-<span class='doccomment'>/// Per-packet header data.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Packed</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PcapRecordHeader</span> {
-    <span class='doccomment'>/// timestamp seconds</span>
-    <span class='kw'>pub</span> <span class='ident'>ts_sec</span> : <span class='ident'>u32</span>,
-    <span class='doccomment'>/// timestamp microseconds (or nanoseconds, depending on the header)</span>
-    <span class='kw'>pub</span> <span class='ident'>ts_usec</span> : <span class='ident'>u32</span>,
-    <span class='doccomment'>/// number of octets of packet saved in file</span>
-    <span class='kw'>pub</span> <span class='ident'>incl_len</span> : <span class='ident'>u32</span>,
-    <span class='doccomment'>/// actual length of packet</span>
-    <span class='kw'>pub</span> <span class='ident'>orig_len</span> : <span class='ident'>u32</span>,
+<span class="doccomment">/// Per-packet header data.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Packed</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">packed</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PcapRecordHeader</span> {
+    <span class="doccomment">/// timestamp seconds</span>
+    <span class="kw">pub</span> <span class="ident">ts_sec</span> : <span class="ident">u32</span>,
+    <span class="doccomment">/// timestamp microseconds (or nanoseconds, depending on the header)</span>
+    <span class="kw">pub</span> <span class="ident">ts_usec</span> : <span class="ident">u32</span>,
+    <span class="doccomment">/// number of octets of packet saved in file</span>
+    <span class="kw">pub</span> <span class="ident">incl_len</span> : <span class="ident">u32</span>,
+    <span class="doccomment">/// actual length of packet</span>
+    <span class="kw">pub</span> <span class="ident">orig_len</span> : <span class="ident">u32</span>,
 }
-<span class='kw'>impl</span> <span class='ident'>PcapRecordHeader</span> {
-    <span class='doccomment'>/// Swap the bytes according to the byte order defined in the file header.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>swap_bytes</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>file_header</span>: <span class='kw-2'>&amp;</span><span class='ident'>PcapFileHeader</span>) {
-        <span class='kw'>if</span> <span class='ident'>file_header</span>.<span class='ident'>need_byte_swap</span> {
-            <span class='self'>self</span>.<span class='ident'>ts_sec</span>.<span class='ident'>swap_bytes</span>();
-            <span class='self'>self</span>.<span class='ident'>ts_usec</span>.<span class='ident'>swap_bytes</span>();
-            <span class='self'>self</span>.<span class='ident'>incl_len</span>.<span class='ident'>swap_bytes</span>();
-            <span class='self'>self</span>.<span class='ident'>orig_len</span>.<span class='ident'>swap_bytes</span>();
+<span class="kw">impl</span> <span class="ident">PcapRecordHeader</span> {
+    <span class="doccomment">/// Swap the bytes according to the byte order defined in the file header.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">swap_bytes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">file_header</span>: <span class="kw-2">&amp;</span><span class="ident">PcapFileHeader</span>) {
+        <span class="kw">if</span> <span class="ident">file_header</span>.<span class="ident">need_byte_swap</span> {
+            <span class="self">self</span>.<span class="ident">ts_sec</span>.<span class="ident">swap_bytes</span>();
+            <span class="self">self</span>.<span class="ident">ts_usec</span>.<span class="ident">swap_bytes</span>();
+            <span class="self">self</span>.<span class="ident">incl_len</span>.<span class="ident">swap_bytes</span>();
+            <span class="self">self</span>.<span class="ident">orig_len</span>.<span class="ident">swap_bytes</span>();
         }
     }
 
-    <span class='doccomment'>/// Get the time and date of this packet.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_time</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>file_header</span>: <span class='kw-2'>&amp;</span><span class='ident'>PcapFileHeader</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>time</span>::<span class='ident'>Timespec</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>nsec</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>file_header</span>.<span class='ident'>ns_res</span> { <span class='self'>self</span>.<span class='ident'>ts_usec</span> } <span class='kw'>else</span> { <span class='self'>self</span>.<span class='ident'>ts_usec</span> <span class='op'>*</span> <span class='number'>1000</span> } <span class='kw'>as</span> <span class='ident'>i32</span>;
-        <span class='kw'>let</span> <span class='ident'>utc_off</span> : <span class='ident'>i64</span> <span class='op'>=</span> <span class='ident'>file_header</span>.<span class='ident'>utc_offset</span>.<span class='ident'>into</span>();
-        <span class='kw'>let</span> <span class='ident'>sec</span> : <span class='ident'>i64</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>ts_sec</span>.<span class='ident'>into</span>();
-        <span class='kw'>if</span> <span class='ident'>nsec</span> <span class='op'>&gt;=</span> <span class='number'>1_000_000_000</span> {
-            <span class='prelude-val'>None</span>
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>time</span>::<span class='ident'>Timespec</span>::<span class='ident'>new</span>(<span class='ident'>sec</span> <span class='op'>+</span> <span class='ident'>utc_off</span>, <span class='ident'>nsec</span>))
+    <span class="doccomment">/// Get the time and date of this packet.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file_header</span>: <span class="kw-2">&amp;</span><span class="ident">PcapFileHeader</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">time</span>::<span class="ident">Timespec</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">nsec</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">file_header</span>.<span class="ident">ns_res</span> { <span class="self">self</span>.<span class="ident">ts_usec</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">ts_usec</span> <span class="op">*</span> <span class="number">1000</span> } <span class="kw">as</span> <span class="ident">i32</span>;
+        <span class="kw">let</span> <span class="ident">utc_off</span> : <span class="ident">i64</span> <span class="op">=</span> <span class="ident">file_header</span>.<span class="ident">utc_offset</span>.<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">sec</span> : <span class="ident">i64</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ts_sec</span>.<span class="ident">into</span>();
+        <span class="kw">if</span> <span class="ident">nsec</span> <span class="op">&gt;=</span> <span class="number">1_000_000_000</span> {
+            <span class="prelude-val">None</span>
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">time</span>::<span class="ident">Timespec</span>::<span class="ident">new</span>(<span class="ident">sec</span> <span class="op">+</span> <span class="ident">utc_off</span>, <span class="ident">nsec</span>))
         }
     }
 }
 
 
-<span class='doccomment'>/// Known identifiers for the types of packets that might be captured in a `pcap` file. This tells</span>
-<span class='doccomment'>/// you how to interpret the packets you receive.</span>
-<span class='doccomment'>/// </span>
-<span class='doccomment'>/// Look at [tcpdump.org](http://www.tcpdump.org/linktypes.html) for the canonical list with</span>
-<span class='doccomment'>/// descriptions.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>,<span class='ident'>Clone</span>)]</span>
-<span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>u32</span>)]</span>
-<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>,<span class='ident'>non_camel_case_types</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Linktype</span> {
-    <span class='ident'>NULL</span> <span class='op'>=</span> <span class='number'>0</span>,
-    <span class='doccomment'>/// Ethernet packets</span>
-    <span class='ident'>ETHERNET</span> <span class='op'>=</span> <span class='number'>1</span>,
-    <span class='ident'>AX25</span> <span class='op'>=</span> <span class='number'>3</span>,
-    <span class='ident'>IEEE802_5</span> <span class='op'>=</span> <span class='number'>6</span>,
-    <span class='ident'>ARCNET_BSD</span> <span class='op'>=</span> <span class='number'>7</span>,
-    <span class='ident'>SLIP</span> <span class='op'>=</span> <span class='number'>8</span>,
-    <span class='ident'>PPP</span> <span class='op'>=</span> <span class='number'>9</span>,
-    <span class='ident'>FDDI</span> <span class='op'>=</span> <span class='number'>10</span>,
-    <span class='ident'>PPP_HDLC</span> <span class='op'>=</span> <span class='number'>50</span>,
-    <span class='ident'>PPP_ETHER</span> <span class='op'>=</span> <span class='number'>51</span>,
-    <span class='ident'>ATM_RFC1483</span> <span class='op'>=</span> <span class='number'>100</span>,
-    <span class='doccomment'>/// IP packets (IPv4 or IPv6)</span>
-    <span class='ident'>RAW</span> <span class='op'>=</span> <span class='number'>101</span>,
-    <span class='ident'>C_HDLC</span> <span class='op'>=</span> <span class='number'>104</span>,
-    <span class='ident'>IEEE802_11</span> <span class='op'>=</span> <span class='number'>105</span>,
-    <span class='ident'>FRELAY</span> <span class='op'>=</span> <span class='number'>107</span>,
-    <span class='ident'>LOOP</span> <span class='op'>=</span> <span class='number'>108</span>,
-    <span class='ident'>LINUX_SLL</span> <span class='op'>=</span> <span class='number'>113</span>,
-    <span class='ident'>LTALK</span> <span class='op'>=</span> <span class='number'>114</span>,
-    <span class='ident'>PFLOG</span> <span class='op'>=</span> <span class='number'>117</span>,
-    <span class='ident'>IEEE802_11_PRISM</span> <span class='op'>=</span> <span class='number'>119</span>,
-    <span class='ident'>IP_OVER_FC</span> <span class='op'>=</span> <span class='number'>122</span>,
-    <span class='ident'>SUNATM</span> <span class='op'>=</span> <span class='number'>123</span>,
-    <span class='ident'>IEEE802_11_RADIOTAP</span> <span class='op'>=</span> <span class='number'>127</span>,
-    <span class='ident'>ARCNET_LINUX</span> <span class='op'>=</span> <span class='number'>129</span>,
-    <span class='ident'>APPLE_IP_OVER_IEEE1394</span> <span class='op'>=</span> <span class='number'>138</span>,
-    <span class='ident'>MTP2_WITH_PHDR</span> <span class='op'>=</span> <span class='number'>139</span>,
-    <span class='ident'>MTP2</span> <span class='op'>=</span> <span class='number'>140</span>,
-    <span class='ident'>MTP3</span> <span class='op'>=</span> <span class='number'>141</span>,
-    <span class='ident'>SCCP</span> <span class='op'>=</span> <span class='number'>142</span>,
-    <span class='ident'>DOCSIS</span> <span class='op'>=</span> <span class='number'>143</span>,
-    <span class='ident'>LINUX_IRDA</span> <span class='op'>=</span> <span class='number'>144</span>,
-    <span class='ident'>USER00_LINKTYPE</span> <span class='op'>=</span> <span class='number'>147</span>,
-    <span class='ident'>USER01_LINKTYPE</span> <span class='op'>=</span> <span class='number'>148</span>,
-    <span class='ident'>USER02_LINKTYPE</span> <span class='op'>=</span> <span class='number'>149</span>,
-    <span class='ident'>USER03_LINKTYPE</span> <span class='op'>=</span> <span class='number'>150</span>,
-    <span class='ident'>USER04_LINKTYPE</span> <span class='op'>=</span> <span class='number'>151</span>,
-    <span class='ident'>USER05_LINKTYPE</span> <span class='op'>=</span> <span class='number'>152</span>,
-    <span class='ident'>USER06_LINKTYPE</span> <span class='op'>=</span> <span class='number'>153</span>,
-    <span class='ident'>USER07_LINKTYPE</span> <span class='op'>=</span> <span class='number'>154</span>,
-    <span class='ident'>USER08_LINKTYPE</span> <span class='op'>=</span> <span class='number'>155</span>,
-    <span class='ident'>USER09_LINKTYPE</span> <span class='op'>=</span> <span class='number'>156</span>,
-    <span class='ident'>USER10_LINKTYPE</span> <span class='op'>=</span> <span class='number'>157</span>,
-    <span class='ident'>USER11_LINKTYPE</span> <span class='op'>=</span> <span class='number'>158</span>,
-    <span class='ident'>USER12_LINKTYPE</span> <span class='op'>=</span> <span class='number'>159</span>,
-    <span class='ident'>USER13_LINKTYPE</span> <span class='op'>=</span> <span class='number'>160</span>,
-    <span class='ident'>USER14_LINKTYPE</span> <span class='op'>=</span> <span class='number'>161</span>,
-    <span class='ident'>USER15_LINKTYPE</span> <span class='op'>=</span> <span class='number'>162</span>,
-    <span class='ident'>IEEE802_11_AVS</span> <span class='op'>=</span> <span class='number'>163</span>,
-    <span class='ident'>BACNET_MS_TP</span> <span class='op'>=</span> <span class='number'>165</span>,
-    <span class='ident'>PPP_PPPD</span> <span class='op'>=</span> <span class='number'>166</span>,
-    <span class='ident'>GPRS_LLC</span> <span class='op'>=</span> <span class='number'>169</span>,
-    <span class='ident'>GPF_T</span> <span class='op'>=</span> <span class='number'>170</span>,
-    <span class='ident'>GPF_F</span> <span class='op'>=</span> <span class='number'>171</span>,
-    <span class='ident'>LINUX_LAPD</span> <span class='op'>=</span> <span class='number'>177</span>,
-    <span class='ident'>BLUETOOTH_HCI_H4</span> <span class='op'>=</span> <span class='number'>187</span>,
-    <span class='ident'>USB_LINUX</span> <span class='op'>=</span> <span class='number'>189</span>,
-    <span class='ident'>PPI</span> <span class='op'>=</span> <span class='number'>192</span>,
-    <span class='ident'>IEEE802_15_4</span> <span class='op'>=</span> <span class='number'>195</span>,
-    <span class='ident'>SITA</span> <span class='op'>=</span> <span class='number'>196</span>,
-    <span class='ident'>ERF</span> <span class='op'>=</span> <span class='number'>197</span>,
-    <span class='ident'>BLUETOOTH_HCI_H4_WITH_PHDR</span> <span class='op'>=</span> <span class='number'>201</span>,
-    <span class='ident'>AX25_KISS</span> <span class='op'>=</span> <span class='number'>202</span>,
-    <span class='ident'>LAPD</span> <span class='op'>=</span> <span class='number'>203</span>,
-    <span class='ident'>PPP_WITH_DIR</span> <span class='op'>=</span> <span class='number'>204</span>,
-    <span class='ident'>C_HDLC_WITH_DIR</span> <span class='op'>=</span> <span class='number'>205</span>,
-    <span class='ident'>FRELAY_WITH_DIR</span> <span class='op'>=</span> <span class='number'>206</span>,
-    <span class='ident'>IPMB_LINUX</span> <span class='op'>=</span> <span class='number'>209</span>,
-    <span class='ident'>IEEE802_15_4_NONASK_PHY</span> <span class='op'>=</span> <span class='number'>215</span>,
-    <span class='ident'>USB_LINUX_MMAPPED</span> <span class='op'>=</span> <span class='number'>220</span>,
-    <span class='ident'>FC_2</span> <span class='op'>=</span> <span class='number'>224</span>,
-    <span class='ident'>FC_2_WITH_FRAME_DELIMS</span> <span class='op'>=</span> <span class='number'>225</span>,
-    <span class='ident'>IPNET</span> <span class='op'>=</span> <span class='number'>226</span>,
-    <span class='ident'>CAN_SOCKETCAN</span> <span class='op'>=</span> <span class='number'>227</span>,
-    <span class='ident'>IPV4</span> <span class='op'>=</span> <span class='number'>228</span>,
-    <span class='ident'>IPV6</span> <span class='op'>=</span> <span class='number'>229</span>,
-    <span class='ident'>IEEE802_15_4_NOFCS</span> <span class='op'>=</span> <span class='number'>230</span>,
-    <span class='ident'>DBUS</span> <span class='op'>=</span> <span class='number'>231</span>,
-    <span class='ident'>DVB_CI</span> <span class='op'>=</span> <span class='number'>235</span>,
-    <span class='ident'>MUX27010</span> <span class='op'>=</span> <span class='number'>236</span>,
-    <span class='ident'>STANAG_5066_D_PDU</span> <span class='op'>=</span> <span class='number'>237</span>,
-    <span class='ident'>NFLOG</span> <span class='op'>=</span> <span class='number'>239</span>,
-    <span class='ident'>NETANALYZER</span> <span class='op'>=</span> <span class='number'>240</span>,
-    <span class='ident'>NETANALYZER_TRANSPARENT</span> <span class='op'>=</span> <span class='number'>241</span>,
-    <span class='ident'>IPOIB</span> <span class='op'>=</span> <span class='number'>242</span>,
-    <span class='ident'>MPEG_2_TS</span> <span class='op'>=</span> <span class='number'>243</span>,
-    <span class='ident'>NG40</span> <span class='op'>=</span> <span class='number'>244</span>,
-    <span class='ident'>NFC_LLCP</span> <span class='op'>=</span> <span class='number'>245</span>,
-    <span class='ident'>INFINIBAND</span> <span class='op'>=</span> <span class='number'>247</span>,
-    <span class='ident'>SCTP</span> <span class='op'>=</span> <span class='number'>248</span>,
-    <span class='ident'>USBPCAP</span> <span class='op'>=</span> <span class='number'>249</span>,
-    <span class='ident'>RTAC_SERIAL</span> <span class='op'>=</span> <span class='number'>250</span>,
-    <span class='ident'>BLUETOOTH_LE_LL</span> <span class='op'>=</span> <span class='number'>251</span>,
-    <span class='ident'>NETLINK</span> <span class='op'>=</span> <span class='number'>253</span>,
-    <span class='ident'>BLUETOOTH_LINUX_MONITOR</span> <span class='op'>=</span> <span class='number'>254</span>,
-    <span class='ident'>BLUETOOTH_BREDR_BB</span> <span class='op'>=</span> <span class='number'>255</span>,
-    <span class='ident'>BLUETOOTH_LE_LL_WITH_PHDR</span> <span class='op'>=</span> <span class='number'>256</span>,
-    <span class='ident'>PROFIBUS_DL</span> <span class='op'>=</span> <span class='number'>257</span>,
-    <span class='ident'>PKTAP</span> <span class='op'>=</span> <span class='number'>258</span>,
-    <span class='ident'>EPON</span> <span class='op'>=</span> <span class='number'>259</span>,
-    <span class='ident'>IPMI_HPM_2</span> <span class='op'>=</span> <span class='number'>260</span>,
-    <span class='ident'>ZWAVE_R1_R2</span> <span class='op'>=</span> <span class='number'>261</span>,
-    <span class='ident'>ZWAVE_R3</span> <span class='op'>=</span> <span class='number'>262</span>,
-    <span class='ident'>WATTSTOPPER_DLM</span> <span class='op'>=</span> <span class='number'>263</span>,
-    <span class='ident'>ISO_14443</span> <span class='op'>=</span> <span class='number'>264</span>,
-    <span class='ident'>RDS</span> <span class='op'>=</span> <span class='number'>265</span>,
-    <span class='ident'>USB_DARWIN</span> <span class='op'>=</span> <span class='number'>266</span>,
+<span class="doccomment">/// Known identifiers for the types of packets that might be captured in a `pcap` file. This tells</span>
+<span class="doccomment">/// you how to interpret the packets you receive.</span>
+<span class="doccomment">/// </span>
+<span class="doccomment">/// Look at [tcpdump.org](http://www.tcpdump.org/linktypes.html) for the canonical list with</span>
+<span class="doccomment">/// descriptions.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>,<span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">u32</span>)]</span>
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>,<span class="ident">non_camel_case_types</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Linktype</span> {
+    <span class="ident">NULL</span> <span class="op">=</span> <span class="number">0</span>,
+    <span class="doccomment">/// Ethernet packets</span>
+    <span class="ident">ETHERNET</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="ident">AX25</span> <span class="op">=</span> <span class="number">3</span>,
+    <span class="ident">IEEE802_5</span> <span class="op">=</span> <span class="number">6</span>,
+    <span class="ident">ARCNET_BSD</span> <span class="op">=</span> <span class="number">7</span>,
+    <span class="ident">SLIP</span> <span class="op">=</span> <span class="number">8</span>,
+    <span class="ident">PPP</span> <span class="op">=</span> <span class="number">9</span>,
+    <span class="ident">FDDI</span> <span class="op">=</span> <span class="number">10</span>,
+    <span class="ident">PPP_HDLC</span> <span class="op">=</span> <span class="number">50</span>,
+    <span class="ident">PPP_ETHER</span> <span class="op">=</span> <span class="number">51</span>,
+    <span class="ident">ATM_RFC1483</span> <span class="op">=</span> <span class="number">100</span>,
+    <span class="doccomment">/// IP packets (IPv4 or IPv6)</span>
+    <span class="ident">RAW</span> <span class="op">=</span> <span class="number">101</span>,
+    <span class="ident">C_HDLC</span> <span class="op">=</span> <span class="number">104</span>,
+    <span class="ident">IEEE802_11</span> <span class="op">=</span> <span class="number">105</span>,
+    <span class="ident">FRELAY</span> <span class="op">=</span> <span class="number">107</span>,
+    <span class="ident">LOOP</span> <span class="op">=</span> <span class="number">108</span>,
+    <span class="ident">LINUX_SLL</span> <span class="op">=</span> <span class="number">113</span>,
+    <span class="ident">LTALK</span> <span class="op">=</span> <span class="number">114</span>,
+    <span class="ident">PFLOG</span> <span class="op">=</span> <span class="number">117</span>,
+    <span class="ident">IEEE802_11_PRISM</span> <span class="op">=</span> <span class="number">119</span>,
+    <span class="ident">IP_OVER_FC</span> <span class="op">=</span> <span class="number">122</span>,
+    <span class="ident">SUNATM</span> <span class="op">=</span> <span class="number">123</span>,
+    <span class="ident">IEEE802_11_RADIOTAP</span> <span class="op">=</span> <span class="number">127</span>,
+    <span class="ident">ARCNET_LINUX</span> <span class="op">=</span> <span class="number">129</span>,
+    <span class="ident">APPLE_IP_OVER_IEEE1394</span> <span class="op">=</span> <span class="number">138</span>,
+    <span class="ident">MTP2_WITH_PHDR</span> <span class="op">=</span> <span class="number">139</span>,
+    <span class="ident">MTP2</span> <span class="op">=</span> <span class="number">140</span>,
+    <span class="ident">MTP3</span> <span class="op">=</span> <span class="number">141</span>,
+    <span class="ident">SCCP</span> <span class="op">=</span> <span class="number">142</span>,
+    <span class="ident">DOCSIS</span> <span class="op">=</span> <span class="number">143</span>,
+    <span class="ident">LINUX_IRDA</span> <span class="op">=</span> <span class="number">144</span>,
+    <span class="ident">USER00_LINKTYPE</span> <span class="op">=</span> <span class="number">147</span>,
+    <span class="ident">USER01_LINKTYPE</span> <span class="op">=</span> <span class="number">148</span>,
+    <span class="ident">USER02_LINKTYPE</span> <span class="op">=</span> <span class="number">149</span>,
+    <span class="ident">USER03_LINKTYPE</span> <span class="op">=</span> <span class="number">150</span>,
+    <span class="ident">USER04_LINKTYPE</span> <span class="op">=</span> <span class="number">151</span>,
+    <span class="ident">USER05_LINKTYPE</span> <span class="op">=</span> <span class="number">152</span>,
+    <span class="ident">USER06_LINKTYPE</span> <span class="op">=</span> <span class="number">153</span>,
+    <span class="ident">USER07_LINKTYPE</span> <span class="op">=</span> <span class="number">154</span>,
+    <span class="ident">USER08_LINKTYPE</span> <span class="op">=</span> <span class="number">155</span>,
+    <span class="ident">USER09_LINKTYPE</span> <span class="op">=</span> <span class="number">156</span>,
+    <span class="ident">USER10_LINKTYPE</span> <span class="op">=</span> <span class="number">157</span>,
+    <span class="ident">USER11_LINKTYPE</span> <span class="op">=</span> <span class="number">158</span>,
+    <span class="ident">USER12_LINKTYPE</span> <span class="op">=</span> <span class="number">159</span>,
+    <span class="ident">USER13_LINKTYPE</span> <span class="op">=</span> <span class="number">160</span>,
+    <span class="ident">USER14_LINKTYPE</span> <span class="op">=</span> <span class="number">161</span>,
+    <span class="ident">USER15_LINKTYPE</span> <span class="op">=</span> <span class="number">162</span>,
+    <span class="ident">IEEE802_11_AVS</span> <span class="op">=</span> <span class="number">163</span>,
+    <span class="ident">BACNET_MS_TP</span> <span class="op">=</span> <span class="number">165</span>,
+    <span class="ident">PPP_PPPD</span> <span class="op">=</span> <span class="number">166</span>,
+    <span class="ident">GPRS_LLC</span> <span class="op">=</span> <span class="number">169</span>,
+    <span class="ident">GPF_T</span> <span class="op">=</span> <span class="number">170</span>,
+    <span class="ident">GPF_F</span> <span class="op">=</span> <span class="number">171</span>,
+    <span class="ident">LINUX_LAPD</span> <span class="op">=</span> <span class="number">177</span>,
+    <span class="ident">BLUETOOTH_HCI_H4</span> <span class="op">=</span> <span class="number">187</span>,
+    <span class="ident">USB_LINUX</span> <span class="op">=</span> <span class="number">189</span>,
+    <span class="ident">PPI</span> <span class="op">=</span> <span class="number">192</span>,
+    <span class="ident">IEEE802_15_4</span> <span class="op">=</span> <span class="number">195</span>,
+    <span class="ident">SITA</span> <span class="op">=</span> <span class="number">196</span>,
+    <span class="ident">ERF</span> <span class="op">=</span> <span class="number">197</span>,
+    <span class="ident">BLUETOOTH_HCI_H4_WITH_PHDR</span> <span class="op">=</span> <span class="number">201</span>,
+    <span class="ident">AX25_KISS</span> <span class="op">=</span> <span class="number">202</span>,
+    <span class="ident">LAPD</span> <span class="op">=</span> <span class="number">203</span>,
+    <span class="ident">PPP_WITH_DIR</span> <span class="op">=</span> <span class="number">204</span>,
+    <span class="ident">C_HDLC_WITH_DIR</span> <span class="op">=</span> <span class="number">205</span>,
+    <span class="ident">FRELAY_WITH_DIR</span> <span class="op">=</span> <span class="number">206</span>,
+    <span class="ident">IPMB_LINUX</span> <span class="op">=</span> <span class="number">209</span>,
+    <span class="ident">IEEE802_15_4_NONASK_PHY</span> <span class="op">=</span> <span class="number">215</span>,
+    <span class="ident">USB_LINUX_MMAPPED</span> <span class="op">=</span> <span class="number">220</span>,
+    <span class="ident">FC_2</span> <span class="op">=</span> <span class="number">224</span>,
+    <span class="ident">FC_2_WITH_FRAME_DELIMS</span> <span class="op">=</span> <span class="number">225</span>,
+    <span class="ident">IPNET</span> <span class="op">=</span> <span class="number">226</span>,
+    <span class="ident">CAN_SOCKETCAN</span> <span class="op">=</span> <span class="number">227</span>,
+    <span class="ident">IPV4</span> <span class="op">=</span> <span class="number">228</span>,
+    <span class="ident">IPV6</span> <span class="op">=</span> <span class="number">229</span>,
+    <span class="ident">IEEE802_15_4_NOFCS</span> <span class="op">=</span> <span class="number">230</span>,
+    <span class="ident">DBUS</span> <span class="op">=</span> <span class="number">231</span>,
+    <span class="ident">DVB_CI</span> <span class="op">=</span> <span class="number">235</span>,
+    <span class="ident">MUX27010</span> <span class="op">=</span> <span class="number">236</span>,
+    <span class="ident">STANAG_5066_D_PDU</span> <span class="op">=</span> <span class="number">237</span>,
+    <span class="ident">NFLOG</span> <span class="op">=</span> <span class="number">239</span>,
+    <span class="ident">NETANALYZER</span> <span class="op">=</span> <span class="number">240</span>,
+    <span class="ident">NETANALYZER_TRANSPARENT</span> <span class="op">=</span> <span class="number">241</span>,
+    <span class="ident">IPOIB</span> <span class="op">=</span> <span class="number">242</span>,
+    <span class="ident">MPEG_2_TS</span> <span class="op">=</span> <span class="number">243</span>,
+    <span class="ident">NG40</span> <span class="op">=</span> <span class="number">244</span>,
+    <span class="ident">NFC_LLCP</span> <span class="op">=</span> <span class="number">245</span>,
+    <span class="ident">INFINIBAND</span> <span class="op">=</span> <span class="number">247</span>,
+    <span class="ident">SCTP</span> <span class="op">=</span> <span class="number">248</span>,
+    <span class="ident">USBPCAP</span> <span class="op">=</span> <span class="number">249</span>,
+    <span class="ident">RTAC_SERIAL</span> <span class="op">=</span> <span class="number">250</span>,
+    <span class="ident">BLUETOOTH_LE_LL</span> <span class="op">=</span> <span class="number">251</span>,
+    <span class="ident">NETLINK</span> <span class="op">=</span> <span class="number">253</span>,
+    <span class="ident">BLUETOOTH_LINUX_MONITOR</span> <span class="op">=</span> <span class="number">254</span>,
+    <span class="ident">BLUETOOTH_BREDR_BB</span> <span class="op">=</span> <span class="number">255</span>,
+    <span class="ident">BLUETOOTH_LE_LL_WITH_PHDR</span> <span class="op">=</span> <span class="number">256</span>,
+    <span class="ident">PROFIBUS_DL</span> <span class="op">=</span> <span class="number">257</span>,
+    <span class="ident">PKTAP</span> <span class="op">=</span> <span class="number">258</span>,
+    <span class="ident">EPON</span> <span class="op">=</span> <span class="number">259</span>,
+    <span class="ident">IPMI_HPM_2</span> <span class="op">=</span> <span class="number">260</span>,
+    <span class="ident">ZWAVE_R1_R2</span> <span class="op">=</span> <span class="number">261</span>,
+    <span class="ident">ZWAVE_R3</span> <span class="op">=</span> <span class="number">262</span>,
+    <span class="ident">WATTSTOPPER_DLM</span> <span class="op">=</span> <span class="number">263</span>,
+    <span class="ident">ISO_14443</span> <span class="op">=</span> <span class="number">264</span>,
+    <span class="ident">RDS</span> <span class="op">=</span> <span class="number">265</span>,
+    <span class="ident">USB_DARWIN</span> <span class="op">=</span> <span class="number">266</span>,
 }
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>Linktype</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>u32</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>val</span>: <span class='ident'>Linktype</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='ident'>val</span> <span class='kw'>as</span> <span class='ident'>u32</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Linktype</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">u32</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">val</span>: <span class="ident">Linktype</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="ident">val</span> <span class="kw">as</span> <span class="ident">u32</span>
     }
 }
 </pre>
@@ -725,7 +722,6 @@
         window.rootPath = "../../";
         window.currentCrate = "rpcap";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

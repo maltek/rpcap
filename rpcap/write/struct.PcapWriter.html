@@ -9,6 +9,7 @@
 
     <title>rpcap::write::PcapWriter - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -16,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -28,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>write</a></p><script>window.sidebarCurrent = {name: 'PcapWriter', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct PcapWriter</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>write</a></p><script>window.sidebarCurrent = {name: 'PcapWriter', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -42,25 +43,25 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>write</a>::<wbr><a class='struct' href=''>PcapWriter</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>rpcap</a>::<wbr><a href='index.html'>write</a>::<wbr><a class="struct" href=''>PcapWriter</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../../src/rpcap/write.rs.html#21-24' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct PcapWriter&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>The <code>PcapReader</code> struct allows reading packets from a packet capture.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt; <a class='struct' href='../../rpcap/write/struct.PcapWriter.html' title='rpcap::write::PcapWriter'>PcapWriter</a>&lt;W&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rpcap/write.rs.html#26-80' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(writer: W, opts: <a class='struct' href='../../rpcap/write/struct.WriteOptions.html' title='rpcap::write::WriteOptions'>WriteOptions</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, <a class='enum' href='../../rpcap/enum.PcapError.html' title='rpcap::PcapError'>PcapError</a>&gt;</code></span></h4>
+<pre class='rust struct'>pub struct PcapWriter&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>The <code>PcapReader</code> struct allows reading packets from a packet capture.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt; <a class="struct" href="../../rpcap/write/struct.PcapWriter.html" title="struct rpcap::write::PcapWriter">PcapWriter</a>&lt;W&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rpcap/write.rs.html#26-80' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(writer: W, opts: <a class="struct" href="../../rpcap/write/struct.WriteOptions.html" title="struct rpcap::write::WriteOptions">WriteOptions</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="../../rpcap/enum.PcapError.html" title="enum rpcap::PcapError">PcapError</a>&gt;</code></span></h4>
 <div class='docblock'><p>Create a new <code>PcapWriter</code> that writes the packet capture data to the specified <code>Write</code>.</p>
-</div><h4 id='method.append' class='method'><span id='append.v' class='invisible'><code>fn <a href='#method.append' class='fnname'>append</a>(writer: W, opts: <a class='struct' href='../../rpcap/write/struct.WriteOptions.html' title='rpcap::write::WriteOptions'>WriteOptions</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;Self, <a class='enum' href='../../rpcap/enum.PcapError.html' title='rpcap::PcapError'>PcapError</a>&gt;</code></span></h4>
+</div><h4 id='method.append' class="method"><span id='append.v' class='invisible'><code>fn <a href='#method.append' class='fnname'>append</a>(writer: W, opts: <a class="struct" href="../../rpcap/write/struct.WriteOptions.html" title="struct rpcap::write::WriteOptions">WriteOptions</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="../../rpcap/enum.PcapError.html" title="enum rpcap::PcapError">PcapError</a>&gt;</code></span></h4>
 <div class='docblock'><p>Create a new <code>PcapWriter</code> that appends the packets to an existing <code>Write</code>. If the
 <code>WriteOptions</code> specified here are different than those used to create the file, the
 resulting file will be invalid.</p>
-</div><h4 id='method.write' class='method'><span id='write.v' class='invisible'><code>fn <a href='#method.write' class='fnname'>write</a>(&amp;mut self, packet: &amp;<a class='struct' href='../../rpcap/struct.CapturedPacket.html' title='rpcap::CapturedPacket'>CapturedPacket</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../../rpcap/enum.PcapError.html' title='rpcap::PcapError'>PcapError</a>&gt;</code></span></h4>
+</div><h4 id='method.write' class="method"><span id='write.v' class='invisible'><code>fn <a href='#method.write' class='fnname'>write</a>(&amp;mut self, packet: &amp;<a class="struct" href="../../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="enum" href="../../rpcap/enum.PcapError.html" title="enum rpcap::PcapError">PcapError</a>&gt;</code></span></h4>
 <div class='docblock'><p>Write a package to the capture file.</p>
-</div><h4 id='method.flush' class='method'><span id='flush.v' class='invisible'><code>fn <a href='#method.flush' class='fnname'>flush</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='struct' href='https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html' title='std::io::error::Error'>Error</a>&gt;</code></span></h4>
+</div><h4 id='method.flush' class="method"><span id='flush.v' class='invisible'><code>fn <a href='#method.flush' class='fnname'>flush</a>(&amp;mut self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">()</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h4>
 <div class='docblock'><p>Flushes the underlying writer.</p>
-</div><h4 id='method.take_writer' class='method'><span id='take_writer.v' class='invisible'><code>fn <a href='#method.take_writer' class='fnname'>take_writer</a>(self) -&gt; W</code></span></h4>
+</div><h4 id='method.take_writer' class="method"><span id='take_writer.v' class='invisible'><code>fn <a href='#method.take_writer' class='fnname'>take_writer</a>(self) -&gt; W</code></span></h4>
 <div class='docblock'><p>Destroys this <code>PcapWriter</code> and returns access to the underlying <code>Write</code>.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -119,7 +120,6 @@ resulting file will be invalid.</p>
         window.rootPath = "../../";
         window.currentCrate = "rpcap";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>
