@@ -353,10 +353,32 @@
 <span id="308">308</span>
 <span id="309">309</span>
 <span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">time</span>;
 
 <span class="kw">use</span> <span class="ident">bytepack</span>::<span class="ident">Packed</span>;
+
+<span class="kw">fn</span> <span class="ident">set</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">Copy</span> <span class="op">+</span> <span class="ident">Clone</span>, <span class="ident">F</span><span class="op">&gt;</span>(<span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">func</span>: <span class="ident">F</span>)
+    <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">T</span> {
+    <span class="kw">let</span> <span class="ident">r</span> <span class="op">=</span> <span class="ident">func</span>(<span class="kw-2">*</span><span class="ident">v</span>);
+    <span class="kw-2">*</span><span class="ident">v</span> <span class="op">=</span> <span class="ident">r</span>;
+}
 
 <span class="doccomment">/// The serialized file header data.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Packed</span>)]</span>
@@ -418,16 +440,19 @@
 }
 <span class="kw">impl</span> <span class="ident">PcapFileHeader</span> {
     <span class="doccomment">/// Parse header data from file.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">header</span>: <span class="ident">PcapFileHeaderInFile</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">magic</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">PcapMagic</span>::<span class="ident">try_from</span>(<span class="ident">header</span>.<span class="ident">magic_num</span>) { <span class="ident">m</span> } <span class="kw">else</span> { <span class="kw">return</span> <span class="prelude-val">None</span>; };
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="kw-2">mut</span> <span class="ident">header</span>: <span class="ident">PcapFileHeaderInFile</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">magic</span> <span class="op">=</span> {
+            <span class="kw">let</span> <span class="ident">magic</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">magic_num</span>;
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">m</span>) <span class="op">=</span> <span class="ident">PcapMagic</span>::<span class="ident">try_from</span>(<span class="ident">magic</span>) { <span class="ident">m</span> } <span class="kw">else</span> { <span class="kw">return</span> <span class="prelude-val">None</span>; }
+        };
 
         <span class="kw">if</span> <span class="ident">magic</span>.<span class="ident">need_byte_swap</span>() {
-            <span class="ident">header</span>.<span class="ident">version_major</span>.<span class="ident">swap_bytes</span>();
-            <span class="ident">header</span>.<span class="ident">version_minor</span>.<span class="ident">swap_bytes</span>();
-            <span class="ident">header</span>.<span class="ident">thiszone</span>.<span class="ident">swap_bytes</span>();
-            <span class="ident">header</span>.<span class="ident">sigfigs</span>.<span class="ident">swap_bytes</span>();
-            <span class="ident">header</span>.<span class="ident">snaplen</span>.<span class="ident">swap_bytes</span>();
-            <span class="ident">header</span>.<span class="ident">network</span>.<span class="ident">swap_bytes</span>();
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">header</span>.<span class="ident">version_major</span>, <span class="ident">u16</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">header</span>.<span class="ident">version_minor</span>, <span class="ident">u16</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">header</span>.<span class="ident">thiszone</span>, <span class="ident">i32</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">header</span>.<span class="ident">sigfigs</span>, <span class="ident">u32</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">header</span>.<span class="ident">snaplen</span>, <span class="ident">u32</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">header</span>.<span class="ident">network</span>, <span class="ident">u32</span>::<span class="ident">swap_bytes</span>);
         }
 
         <span class="kw">let</span> <span class="ident">snaplen</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">snaplen</span> <span class="kw">as</span> <span class="ident">usize</span>;
@@ -520,19 +545,26 @@
     <span class="doccomment">/// Swap the bytes according to the byte order defined in the file header.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">swap_bytes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">file_header</span>: <span class="kw-2">&amp;</span><span class="ident">PcapFileHeader</span>) {
         <span class="kw">if</span> <span class="ident">file_header</span>.<span class="ident">need_byte_swap</span> {
-            <span class="self">self</span>.<span class="ident">ts_sec</span>.<span class="ident">swap_bytes</span>();
-            <span class="self">self</span>.<span class="ident">ts_usec</span>.<span class="ident">swap_bytes</span>();
-            <span class="self">self</span>.<span class="ident">incl_len</span>.<span class="ident">swap_bytes</span>();
-            <span class="self">self</span>.<span class="ident">orig_len</span>.<span class="ident">swap_bytes</span>();
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">ts_sec</span>, <span class="ident">u32</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">ts_usec</span>, <span class="ident">u32</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">incl_len</span>, <span class="ident">u32</span>::<span class="ident">swap_bytes</span>);
+            <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">orig_len</span>, <span class="ident">u32</span>::<span class="ident">swap_bytes</span>);
         }
     }
 
     <span class="doccomment">/// Get the time and date of this packet.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_time</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">file_header</span>: <span class="kw-2">&amp;</span><span class="ident">PcapFileHeader</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">time</span>::<span class="ident">Timespec</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">nsec</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">file_header</span>.<span class="ident">ns_res</span> { <span class="self">self</span>.<span class="ident">ts_usec</span> } <span class="kw">else</span> { <span class="self">self</span>.<span class="ident">ts_usec</span> <span class="op">*</span> <span class="number">1000</span> } <span class="kw">as</span> <span class="ident">i32</span>;
+        <span class="kw">let</span> <span class="ident">nsec</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">file_header</span>.<span class="ident">ns_res</span> {
+            <span class="self">self</span>.<span class="ident">ts_usec</span>
+        } <span class="kw">else</span> {
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ts_usec</span>.<span class="ident">checked_mul</span>(<span class="number">1000</span>) {
+                <span class="prelude-val">Some</span>(<span class="ident">u</span>) <span class="op">=&gt;</span> <span class="ident">u</span>,
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+            }
+        } <span class="kw">as</span> <span class="ident">i32</span>;
         <span class="kw">let</span> <span class="ident">utc_off</span> : <span class="ident">i64</span> <span class="op">=</span> <span class="ident">file_header</span>.<span class="ident">utc_offset</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">sec</span> : <span class="ident">i64</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ts_sec</span>.<span class="ident">into</span>();
-        <span class="kw">if</span> <span class="ident">nsec</span> <span class="op">&gt;=</span> <span class="number">1_000_000_000</span> {
+        <span class="kw">if</span> <span class="ident">nsec</span> <span class="op">&gt;=</span> <span class="number">1_000_000_000</span> <span class="op">||</span> <span class="ident">nsec</span> <span class="op">&lt;</span> <span class="number">0</span> {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
             <span class="prelude-val">Some</span>(<span class="ident">time</span>::<span class="ident">Timespec</span>::<span class="ident">new</span>(<span class="ident">sec</span> <span class="op">+</span> <span class="ident">utc_off</span>, <span class="ident">nsec</span>))
