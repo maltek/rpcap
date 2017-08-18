@@ -2,6 +2,12 @@ use time;
 
 use bytepack::Packed;
 
+fn set<'a, T: Copy + Clone, F>(v: &'a mut T, func: F)
+    where F: Fn(T) -> T {
+    let r = func(*v);
+    *v = r;
+}
+
 /// The serialized file header data.
 #[derive(Packed)]
 #[repr(packed)]
@@ -62,16 +68,19 @@ pub struct PcapFileHeader {
 }
 impl PcapFileHeader {
     /// Parse header data from file.
-    pub fn try_from(header: PcapFileHeaderInFile) -> Option<Self> {
-        let magic = if let Some(m) = PcapMagic::try_from(header.magic_num) { m } else { return None; };
+    pub fn try_from(mut header: PcapFileHeaderInFile) -> Option<Self> {
+        let magic = {
+            let magic = header.magic_num;
+            if let Some(m) = PcapMagic::try_from(magic) { m } else { return None; }
+        };
 
         if magic.need_byte_swap() {
-            header.version_major.swap_bytes();
-            header.version_minor.swap_bytes();
-            header.thiszone.swap_bytes();
-            header.sigfigs.swap_bytes();
-            header.snaplen.swap_bytes();
-            header.network.swap_bytes();
+            set(&mut header.version_major, u16::swap_bytes);
+            set(&mut header.version_minor, u16::swap_bytes);
+            set(&mut header.thiszone, i32::swap_bytes);
+            set(&mut header.sigfigs, u32::swap_bytes);
+            set(&mut header.snaplen, u32::swap_bytes);
+            set(&mut header.network, u32::swap_bytes);
         }
 
         let snaplen = header.snaplen as usize;
@@ -164,10 +173,10 @@ impl PcapRecordHeader {
     /// Swap the bytes according to the byte order defined in the file header.
     pub fn swap_bytes(&mut self, file_header: &PcapFileHeader) {
         if file_header.need_byte_swap {
-            self.ts_sec.swap_bytes();
-            self.ts_usec.swap_bytes();
-            self.incl_len.swap_bytes();
-            self.orig_len.swap_bytes();
+            set(&mut self.ts_sec, u32::swap_bytes);
+            set(&mut self.ts_usec, u32::swap_bytes);
+            set(&mut self.incl_len, u32::swap_bytes);
+            set(&mut self.orig_len, u32::swap_bytes);
         }
     }
 

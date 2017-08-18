@@ -25,7 +25,7 @@ let mut pcapw = PcapWriter::new(writer, WriteOptions {
 
 // copy all packets from example.pcap to copy.pcap
 while let Some(packet) = pcapr.next().unwrap() {
-    println!("packet at {} with size {} (cropped to {})", 
+    println!("packet at {} with size {} (cropped from {})",
         packet.time, packet.data.len(), packet.orig_len);
     pcapw.write(&packet).unwrap();
 }

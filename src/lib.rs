@@ -34,7 +34,7 @@ pub struct CapturedPacket<'a> {
     /// The time when the packet was captured.
     pub time: time::Timespec,
     /// The contents of the packet (possibly truncated to `orig_len` bytes during capture).
-    /// Depending on the `Linktype` of the capture, there might be completely different data in
+    /// Depending on the [`Linktype`](enum.Linktype.html) of the capture, there might be completely different data in
     /// this packet. The user of this library is responsible for interpreting the contents
     /// correctly.
     pub data: &'a [u8],
