@@ -74,8 +74,11 @@ impl<R : io::Read> PcapReader<R> {
         let mut toread = rh.incl_len as usize;
         if state.packet_buffer.capacity() < toread {
             while toread > state.packet_buffer.capacity() {
-                self.reader.read_exact(state.packet_buffer.as_mut_slice())?;
-                toread -= state.packet_buffer.capacity();
+                let cnt = self.reader.read(state.packet_buffer.as_mut_slice())?;
+                if cnt == 0 {
+                    return Err(PcapError::InvalidPacketSize);
+                }
+                toread -= cnt;
             }
             self.reader.read_exact(&mut state.packet_buffer[..toread])?;
             return Err(PcapError::InvalidPacketSize);
