@@ -182,10 +182,17 @@ impl PcapRecordHeader {
 
     /// Get the time and date of this packet.
     pub fn get_time(&self, file_header: &PcapFileHeader) -> Option<time::Timespec> {
-        let nsec = if file_header.ns_res { self.ts_usec } else { self.ts_usec * 1000 } as i32;
+        let nsec = if file_header.ns_res {
+            self.ts_usec
+        } else {
+            match self.ts_usec.checked_mul(1000) {
+                Some(u) => u,
+                None => return None,
+            }
+        } as i32;
         let utc_off : i64 = file_header.utc_offset.into();
         let sec : i64 = self.ts_sec.into();
-        if nsec >= 1_000_000_000 {
+        if nsec >= 1_000_000_000 || nsec < 0 {
             None
         } else {
             Some(time::Timespec::new(sec + utc_off, nsec))
