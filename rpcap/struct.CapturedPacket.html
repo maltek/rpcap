@@ -48,35 +48,35 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/rpcap/lib.rs.html#33-44' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/rpcap/lib.rs.html#32-43' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct CapturedPacket&lt;'a&gt; {
-    pub time: <a class="struct" href="https://doc.rust-lang.org/time/time/struct.Timespec.html" title="struct time::Timespec">Timespec</a>,
+    pub time: <a class="struct" href="https://doc.rust-lang.org/nightly/std/time/struct.SystemTime.html" title="struct std::time::SystemTime">SystemTime</a>,
     pub data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>,
     pub orig_len: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>,
 }</pre><div class='docblock'><p>The <code>CapturedPacket</code> struct contains information about a single captured packet.</p>
 </div><h2 id='fields' class='fields'>Fields</h2><span id='structfield.time' class="structfield">
                            <span id='time.v' class='invisible'>
-                           <code>time: <a class="struct" href="https://doc.rust-lang.org/time/time/struct.Timespec.html" title="struct time::Timespec">Timespec</a></code>
+                           <code>time: <a class="struct" href="https://doc.rust-lang.org/nightly/std/time/struct.SystemTime.html" title="struct std::time::SystemTime">SystemTime</a></code>
                            </span></span><div class='docblock'><p>The time when the packet was captured.</p>
 </div><span id='structfield.data' class="structfield">
                            <span id='data.v' class='invisible'>
                            <code>data: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code>
                            </span></span><div class='docblock'><p>The contents of the packet (possibly truncated to <code>orig_len</code> bytes during capture).
-Depending on the <a href="enum.Linktype.html"><code>Linktype</code></a> of the capture, there might be completely different data in
-this packet. The user of this library is responsible for interpreting the contents
-correctly.</p>
+Depending on the <a href="enum.Linktype.html"><code>Linktype</code></a> of the capture, there might be completely
+different data in this packet. The user of this library is responsible for interpreting the
+contents correctly.</p>
 </div><span id='structfield.orig_len' class="structfield">
                            <span id='orig_len.v' class='invisible'>
                            <code>orig_len: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code>
                            </span></span><div class='docblock'><p>The size of the packet as it was on the wire. Might be larger than the size of <code>data</code>, in
 which case <code>data</code> was truncated and is incomplete.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/lib.rs.html#32' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/lib.rs.html#32' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Eq.html" title="trait core::cmp::Eq">Eq</a> for <a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/lib.rs.html#31' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html" title="trait core::cmp::PartialEq">PartialEq</a> for <a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/lib.rs.html#31' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.eq' class="method"><span id='eq.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq' class='fnname'>eq</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>self</code> and <code>other</code> values to be equal, and is used by <code>==</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#tymethod.eq">Read more</a></p>
 </div><h4 id='method.ne' class="method"><span id='ne.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.PartialEq.html#method.ne' class='fnname'>ne</a>(&amp;self, __arg_0: &amp;<a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>This method tests for <code>!=</code>.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/lib.rs.html#32' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'a&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../rpcap/struct.CapturedPacket.html" title="struct rpcap::CapturedPacket">CapturedPacket</a>&lt;'a&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/rpcap/lib.rs.html#31' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>

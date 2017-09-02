@@ -48,9 +48,9 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/rpcap/write.rs.html#21-24' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/rpcap/write.rs.html#22-25' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct PcapWriter&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>The <code>PcapReader</code> struct allows reading packets from a packet capture.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt; <a class="struct" href="../../rpcap/write/struct.PcapWriter.html" title="struct rpcap::write::PcapWriter">PcapWriter</a>&lt;W&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rpcap/write.rs.html#26-80' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt; <a class="struct" href="../../rpcap/write/struct.PcapWriter.html" title="struct rpcap::write::PcapWriter">PcapWriter</a>&lt;W&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/rpcap/write.rs.html#27-87' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(writer: W, opts: <a class="struct" href="../../rpcap/write/struct.WriteOptions.html" title="struct rpcap::write::WriteOptions">WriteOptions</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="../../rpcap/enum.PcapError.html" title="enum rpcap::PcapError">PcapError</a>&gt;</code></span></h4>
 <div class='docblock'><p>Create a new <code>PcapWriter</code> that writes the packet capture data to the specified <code>Write</code>.</p>
 </div><h4 id='method.append' class="method"><span id='append.v' class='invisible'><code>fn <a href='#method.append' class='fnname'>append</a>(writer: W, opts: <a class="struct" href="../../rpcap/write/struct.WriteOptions.html" title="struct rpcap::write::WriteOptions">WriteOptions</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;Self, <a class="enum" href="../../rpcap/enum.PcapError.html" title="enum rpcap::PcapError">PcapError</a>&gt;</code></span></h4>
@@ -63,6 +63,8 @@ resulting file will be invalid.</p>
 <div class='docblock'><p>Flushes the underlying writer.</p>
 </div><h4 id='method.take_writer' class="method"><span id='take_writer.v' class='invisible'><code>fn <a href='#method.take_writer' class='fnname'>take_writer</a>(self) -&gt; W</code></span></h4>
 <div class='docblock'><p>Destroys this <code>PcapWriter</code> and returns access to the underlying <code>Write</code>.</p>
+</div><h4 id='method.get_options' class="method"><span id='get_options.v' class='invisible'><code>fn <a href='#method.get_options' class='fnname'>get_options</a>(&amp;self) -&gt; <a class="struct" href="../../rpcap/write/struct.WriteOptions.html" title="struct rpcap::write::WriteOptions">WriteOptions</a></code></span></h4>
+<div class='docblock'><p>The options used by this <code>PcapWriter</code>.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 
