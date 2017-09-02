@@ -1,5 +1,6 @@
 
 use std::io;
+use std::time::UNIX_EPOCH;
 
 use super::def;
 use super::PcapError;
@@ -12,18 +13,18 @@ use bytepack::Packer;
 #[derive(Copy,Clone)]
 pub struct WriteOptions {
     /// The maximum size of a packet that can be written to the file.
-    pub snaplen : usize,
+    pub snaplen: usize,
     /// The type of packets that will be written to the file. See `Linktype` for known values.
-    pub linktype : u32,
+    pub linktype: u32,
 }
 
 /// The `PcapReader` struct allows reading packets from a packet capture.
-pub struct PcapWriter<W : io::Write> {
+pub struct PcapWriter<W: io::Write> {
     writer: W,
     opts: WriteOptions,
 }
 
-impl<W : io::Write> PcapWriter<W> {
+impl<W: io::Write> PcapWriter<W> {
     /// Create a new `PcapWriter` that writes the packet capture data to the specified `Write`.
     pub fn new(mut writer: W, opts: WriteOptions) -> Result<Self, PcapError> {
         let fh = def::PcapFileHeaderInFile::new(opts.snaplen, opts.linktype)
@@ -44,16 +45,17 @@ impl<W : io::Write> PcapWriter<W> {
 
     /// Write a package to the capture file.
     pub fn write(&mut self, packet: &CapturedPacket) -> Result<(), PcapError> {
-        let sec = packet.time.sec as u32;
-        let nsec = packet.time.nsec as u32;
-        if sec as i64 != packet.time.sec || nsec as i32 != packet.time.nsec {
+        let duration = packet.time.duration_since(UNIX_EPOCH)?;
+        let sec = duration.as_secs() as u32;
+        let nsec = duration.subsec_nanos();
+        if sec as u64 != duration.as_secs() {
             return Err(PcapError::InvalidDate);
         }
 
         let len = packet.data.len() as u32;
         let orig_len = packet.orig_len as u32;
         if packet.data.len() > self.opts.snaplen || len as usize != packet.data.len() ||
-                orig_len as usize != packet.orig_len {
+           orig_len as usize != packet.orig_len {
             return Err(PcapError::InvalidPacketSize);
         }
 
@@ -76,5 +78,10 @@ impl<W : io::Write> PcapWriter<W> {
     /// Destroys this `PcapWriter` and returns access to the underlying `Write`.
     pub fn take_writer(self) -> W {
         self.writer
+    }
+
+    /// The options used by this `PcapWriter`.
+    pub fn get_options(&self) -> WriteOptions {
+        self.opts
     }
 }

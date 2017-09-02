@@ -1,11 +1,9 @@
 //! This crate has functionality for reading and writing packet capture packet files in the
 //! traditional libpcap file format. There is no support for the newer pcapng file format.
-//! 
+//!
 //! Please note that there is no functionality for capturing live packets from a network interface,
 //! this library only handles reading/writing data in the pcap file format.
 
-
-extern crate time;
 
 extern crate bytepack;
 #[macro_use]
@@ -19,6 +17,7 @@ pub mod read;
 pub mod write;
 
 pub use def::Linktype;
+use std::time::SystemTime;
 
 
 
@@ -32,11 +31,11 @@ use std::io;
 #[derive(Eq,PartialEq,Debug)]
 pub struct CapturedPacket<'a> {
     /// The time when the packet was captured.
-    pub time: time::Timespec,
+    pub time: SystemTime,
     /// The contents of the packet (possibly truncated to `orig_len` bytes during capture).
-    /// Depending on the [`Linktype`](enum.Linktype.html) of the capture, there might be completely different data in
-    /// this packet. The user of this library is responsible for interpreting the contents
-    /// correctly.
+    /// Depending on the [`Linktype`](enum.Linktype.html) of the capture, there might be completely
+    /// different data in this packet. The user of this library is responsible for interpreting the
+    /// contents correctly.
     pub data: &'a [u8],
     /// The size of the packet as it was on the wire. Might be larger than the size of `data`, in
     /// which case `data` was truncated and is incomplete.
@@ -70,6 +69,11 @@ impl From<io::Error> for PcapError {
         PcapError::Io(err)
     }
 }
+impl From<std::time::SystemTimeError> for PcapError {
+    fn from(_: std::time::SystemTimeError) -> PcapError {
+        PcapError::InvalidDate
+    }
+}
 impl fmt::Display for PcapError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.description())
@@ -101,7 +105,7 @@ mod test {
     use super::read::PcapReader;
     use super::{CapturedPacket, Linktype};
 
-    use super::time::Timespec;
+    use ::std::time::{Duration, UNIX_EPOCH};
 
     extern crate rand;
     use self::rand::Rng;
@@ -109,26 +113,30 @@ mod test {
     /// Generates 10 buffers with random data.
     fn gen_packet_data() -> Vec<Vec<u8>> {
         let mut rng = rand::thread_rng();
-        (0..10).map(|_| {
-            let size = rng.gen_range::<usize>(0, 2000);
-            rng.gen_iter::<u8>().take(size).collect()
-        }).collect()
+        (0..10)
+            .map(|_| {
+                let size = rng.gen_range::<usize>(0, 2000);
+                rng.gen_iter::<u8>().take(size).collect()
+            })
+            .collect()
     }
 
     /// Generates a random packet for every buffer in `contents`.
     fn gen_packets<'a>(contents: &'a Vec<Vec<u8>>, snaplen: usize) -> Vec<CapturedPacket<'a>> {
         let mut rng = rand::thread_rng();
 
-        contents.iter().map(|data| {
-            let s = rng.gen_range::<i64>(0, i64::from(u32::max_value()) + 1);
-            let ns = rng.gen_range::<i32>(0, 1_000_000_000);
+        contents.iter()
+            .map(|data| {
+                let s = rng.gen_range::<u64>(0, u64::from(u32::max_value()) + 1);
+                let ns = rng.gen_range::<u32>(0, 1_000_000_000);
 
-            CapturedPacket {
-                time: Timespec::new(s, ns),
-                data: &data.chunks(snaplen).next().unwrap(),
-                orig_len: data.len(),
-            }
-        }).collect()
+                CapturedPacket {
+                    time: UNIX_EPOCH + Duration::new(s, ns),
+                    data: &data.chunks(snaplen).next().unwrap(),
+                    orig_len: data.len(),
+                }
+            })
+            .collect()
     }
 
     /// Writes `packets` to the `writer`. Returns the underlying writer of `writer`.
