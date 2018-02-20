@@ -19,8 +19,8 @@ println!("snaplen: {}", pcapr.get_snaplen());
 let outfile = File::create("copy.pcap").unwrap();
 let writer = BufWriter::new(outfile);
 let mut pcapw = PcapWriter::new(writer, WriteOptions {
-    snaplen: pcapr.get_linktype(),
-    linktype: pcapr.get_snaplen(),
+    snaplen: pcapr.get_snaplen(),
+    linktype: pcapr.get_linktype(),
 }).unwrap();
 
 // copy all packets from example.pcap to copy.pcap
