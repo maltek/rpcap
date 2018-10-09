@@ -139,7 +139,7 @@ mod test {
 
     /// Writes `packets` to the `writer`. Returns the underlying writer of `writer`.
     fn write_packets<W: Write>(mut writer: PcapWriter<W>, packets: &[CapturedPacket]) -> W {
-        for p in &packets[..5] {
+        for p in &packets[..packets.len()] {
             writer.write(&p).unwrap();
         }
         writer.take_writer()
@@ -147,25 +147,26 @@ mod test {
 
     #[test]
     fn read_write() {
+        const MAX_PACKET_SIZE : usize = 1000;
+
         let contents = gen_packet_data();
-        let packets = gen_packets(&contents, 1000);
+        let packets = gen_packets(&contents, MAX_PACKET_SIZE);
 
         let opts = WriteOptions {
-            snaplen: 1000,
+            snaplen: MAX_PACKET_SIZE,
             linktype: Linktype::NULL.into(),
         };
 
-        let mut buf = write_packets(PcapWriter::new(Vec::new(), opts).unwrap(), &packets[..5]);
-        buf = write_packets(PcapWriter::append(buf, opts).unwrap(), &packets[5..]);
+        let mut buf = write_packets(PcapWriter::new(Vec::new(), opts).unwrap(), &packets[..packets.len()/2]);
+        buf = write_packets(PcapWriter::append(buf, opts).unwrap(), &packets[packets.len()/2..]);
 
         let mut reader = PcapReader::new(buf.as_slice()).unwrap();
         assert_eq!(reader.get_linktype(), Linktype::NULL.into());
-        assert_eq!(reader.get_snaplen(), 1000);
-        let mut i = 0;
-        while let Some(packet) = reader.next().unwrap() {
-            assert_eq!(packet, packets[i]);
-            i += 1;
+        assert_eq!(reader.get_snaplen(), MAX_PACKET_SIZE);
+        for expect in packets {
+            let actual = reader.next().unwrap().unwrap();
+            assert_eq!(actual, expect);
         }
-        assert_eq!(i, packets.len());
+        assert!(reader.next().unwrap().is_none());
     }
 }
