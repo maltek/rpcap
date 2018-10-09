@@ -1,15 +1,8 @@
 use bytepack::Packed;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-fn set<T: Copy + Clone, F>(v: &mut T, func: F)
-    where F: Fn(T) -> T
-{
-    let r = func(*v);
-    *v = r;
-}
 
 /// The serialized file header data.
-#[derive(Packed)]
 #[repr(C,packed)]
 pub struct PcapFileHeaderInFile {
     /// magic number
@@ -52,6 +45,16 @@ impl PcapFileHeaderInFile {
         }
     }
 }
+impl Packed for PcapFileHeaderInFile {
+    fn switch_endianness(&mut self) {
+        self.version_major = self.version_major.swap_bytes();
+        self.version_minor = self.version_minor.swap_bytes();
+        self.thiszone = self.thiszone.swap_bytes();
+        self.sigfigs = self.sigfigs.swap_bytes();
+        self.snaplen = self.snaplen.swap_bytes();
+        self.network = self.network.swap_bytes();
+    }
+}
 
 /// Fully parsed file header data.
 pub struct PcapFileHeader {
@@ -79,12 +82,7 @@ impl PcapFileHeader {
         };
 
         if magic.need_byte_swap() {
-            set(&mut header.version_major, u16::swap_bytes);
-            set(&mut header.version_minor, u16::swap_bytes);
-            set(&mut header.thiszone, i32::swap_bytes);
-            set(&mut header.sigfigs, u32::swap_bytes);
-            set(&mut header.snaplen, u32::swap_bytes);
-            set(&mut header.network, u32::swap_bytes);
+            header.switch_endianness();
         }
 
         let snaplen = header.snaplen as usize;
@@ -165,7 +163,6 @@ impl From<PcapMagic> for u32 {
 }
 
 /// Per-packet header data.
-#[derive(Packed)]
 #[repr(C,packed)]
 pub struct PcapRecordHeader {
     /// timestamp seconds
@@ -177,17 +174,15 @@ pub struct PcapRecordHeader {
     /// actual length of packet
     pub orig_len: u32,
 }
-impl PcapRecordHeader {
-    /// Swap the bytes according to the byte order defined in the file header.
-    pub fn swap_bytes(&mut self, file_header: &PcapFileHeader) {
-        if file_header.need_byte_swap {
-            set(&mut self.ts_sec, u32::swap_bytes);
-            set(&mut self.ts_usec, u32::swap_bytes);
-            set(&mut self.incl_len, u32::swap_bytes);
-            set(&mut self.orig_len, u32::swap_bytes);
-        }
+impl Packed for PcapRecordHeader {
+    fn switch_endianness(&mut self) {
+        self.ts_sec = self.ts_sec.swap_bytes();
+        self.ts_usec = self.ts_usec.swap_bytes();
+        self.incl_len = self.incl_len.swap_bytes();
+        self.orig_len = self.orig_len.swap_bytes();
     }
-
+}
+impl PcapRecordHeader {
     /// Get the time and date of this packet.
     pub fn get_time(&self, file_header: &PcapFileHeader) -> Option<SystemTime> {
         let nsec = if file_header.ns_res {

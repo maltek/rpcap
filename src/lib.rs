@@ -6,8 +6,6 @@
 
 
 extern crate bytepack;
-#[macro_use]
-extern crate bytepack_derive;
 
 
 mod def;

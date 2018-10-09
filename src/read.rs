@@ -5,7 +5,7 @@ use super::def;
 use super::PcapError;
 use super::CapturedPacket;
 
-use bytepack::Unpacker;
+use bytepack::{Unpacker, Packed};
 
 /// The `PcapReader` struct allows reading packets from a packet capture.
 pub struct PcapReader<R: io::Read> {
@@ -68,7 +68,9 @@ impl<R: io::Read> PcapReader<R> {
         }
         let mut rh = rh.unwrap();
         let state = self.state.as_mut().unwrap();
-        rh.swap_bytes(&state.file_header);
+        if state.file_header.need_byte_swap {
+            rh.switch_endianness();
+        }
 
         let mut toread = rh.incl_len as usize;
         if state.packet_buffer.capacity() < toread {
