@@ -66,20 +66,13 @@ pub struct PcapFileHeader {
     pub network: u32,
     /// The UTC offset of the timestamps.
     pub utc_offset: i32,
-    /// The maximum size of pactured packets.
+    /// The maximum size of captured packets.
     pub snaplen: usize,
 }
 impl PcapFileHeader {
     /// Parse header data from file.
     pub fn try_from(mut header: PcapFileHeaderInFile) -> Option<Self> {
-        let magic = {
-            let magic = header.magic_num;
-            if let Some(m) = PcapMagic::try_from(magic) {
-                m
-            } else {
-                return None;
-            }
-        };
+        let magic = PcapMagic::try_from(header.magic_num)?;
 
         if magic.need_byte_swap() {
             header.switch_endianness();
@@ -188,21 +181,19 @@ impl PcapRecordHeader {
         let nsec = if file_header.ns_res {
             self.ts_usec
         } else {
-            match self.ts_usec.checked_mul(1000) {
-                Some(u) => u,
-                None => return None,
-            }
+            self.ts_usec.checked_mul(1000)?
         };
         let sec = u64::from(self.ts_sec);
         let sec = if file_header.utc_offset < 0 {
-            sec.checked_sub(file_header.utc_offset.abs() as u64)
+            sec.checked_sub(file_header.utc_offset.abs() as u64)?
         } else {
-            sec.checked_add(file_header.utc_offset as u64)
+            sec.checked_add(file_header.utc_offset as u64)?
         };
 
-        match sec {
-            Some(sec) if nsec < 1_000_000_000 => Some(UNIX_EPOCH + Duration::new(sec, nsec)),
-            _ => None,
+        if nsec < 1_000_000_000 {
+            Some(UNIX_EPOCH + Duration::new(sec, nsec))
+        } else {
+            None
         }
     }
 }
