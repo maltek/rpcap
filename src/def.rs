@@ -322,3 +322,15 @@ impl From<Linktype> for u32 {
         val as u32
     }
 }
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn verify_pcap_header() {
+        // Rust docs are very fuzzy about the guarantees of repr(packed), so these tests verify
+        // that the struct layouts are correct.
+        assert_eq!(::std::mem::size_of::<PcapFileHeaderInFile>(), 24);
+        assert_eq!(::std::mem::size_of::<PcapRecordHeader>(), 16);
+    }
+}
