@@ -31,16 +31,32 @@ impl<W: io::Write> PcapWriter<W> {
             .ok_or(PcapError::InvalidFileHeader)?;
         writer.pack(fh)?;
 
-        PcapWriter::append(writer, opts)
+        PcapWriter::append_unchecked(writer, opts)
     }
     /// Create a new `PcapWriter` that appends the packets to an existing `Write`. If the
     /// `WriteOptions` specified here are different than those used to create the file, the
     /// resulting file will be invalid.
-    pub fn append(writer: W, opts: WriteOptions) -> Result<Self, PcapError> {
-        Ok(PcapWriter {
-            writer: writer,
-            opts: opts,
-        })
+    ///
+    /// *Warning:* Only append to created using `PcapWriter::new` on the same machine. Files
+    /// created on other architectures or from another tool/library might use different
+    /// timestamp formats or endianness, leading to data corruption.
+    pub fn append_unchecked(writer: W, opts: WriteOptions) -> Result<Self, PcapError> {
+        Ok(PcapWriter { writer, opts, })
+    }
+
+    /// Create a new `PcapWriter` that appends the packets to an existing stream, which must
+    /// support `Read + Write + Seek` so that the correct format options for the file can be
+    /// determined.
+    pub fn append(mut stream: W) -> Result<Self, PcapError>
+        where W: io::Read + io::Seek
+    {
+        stream.seek(io::SeekFrom::Start(0))?;
+        let (opts, reader) = super::read::PcapReader::new(stream)?;
+
+        let mut writer = reader.take_reader();
+        writer.seek(io::SeekFrom::End(0))?;
+
+        Ok(PcapWriter { writer, opts, })
     }
 
     /// Write a package to the capture file.
@@ -60,11 +76,14 @@ impl<W: io::Write> PcapWriter<W> {
         }
 
         let record_header = def::PcapRecordHeader {
+            // TODO: We might want to support low-res timestamps at some point.
             ts_sec: sec,
             ts_usec: nsec,
             incl_len: len,
-            orig_len: orig_len,
+            orig_len,
         };
+
+        // TODO: We might want to support for writing files in non-native endianness at some point.
 
         self.writer.pack(record_header)?;
         self.writer.write_all(packet.data).map_err(PcapError::from)

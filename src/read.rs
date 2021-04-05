@@ -8,7 +8,7 @@ use super::CapturedPacket;
 use bytepack::{Unpacker, Packed};
 
 /// The `PcapReader` struct allows reading packets from a packet capture.
-pub struct PcapReader<R: io::Read> {
+pub struct PcapReader<R> {
     reader: R,
     network: u32,
     state: Option<PcapState>,
@@ -143,7 +143,7 @@ mod test {
         }
 
         for r in &mut readers {
-            assert_eq!(r.next().unwrap(), None);
+            assert!(r.next().unwrap().is_none());
         }
     }
 }
