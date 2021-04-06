@@ -77,9 +77,8 @@ impl<W: io::Write> PcapWriter<W> {
         let orig_len = u32::try_from(packet.orig_len).or(Err(PcapError::InvalidPacketSize))?;
 
         let record_header = def::PcapRecordHeader {
-            // TODO: We might want to support low-res timestamps at some point.
             ts_sec: sec,
-            ts_usec: nsec,
+            ts_usec: if self.opts.high_res_timestamps { nsec } else { div_rounded(nsec, 1000) },
             incl_len: len,
             orig_len,
         };
@@ -107,6 +106,10 @@ impl<W: io::Write> PcapWriter<W> {
         self.opts
     }
 }
+fn div_rounded(val: u32, divisor: u32) -> u32 {
+    (val + (divisor / 2)) / divisor
+}
+
 #[cfg(not(feature = "time"))]
 fn secs_since_epoch(time: Time) -> Option<(u32, u32)> {
     let duration = time.duration_since(UNIX_EPOCH).ok()?;
