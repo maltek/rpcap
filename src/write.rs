@@ -1,10 +1,12 @@
 
 use std::io;
+#[cfg(not(feature = "time"))]
 use std::time::UNIX_EPOCH;
 
 use super::def;
 use super::PcapError;
 use super::CapturedPacket;
+use super::Time;
 
 use bytepack::Packer;
 
@@ -61,12 +63,11 @@ impl<W: io::Write> PcapWriter<W> {
 
     /// Write a package to the capture file.
     pub fn write(&mut self, packet: &CapturedPacket) -> Result<(), PcapError> {
-        let duration = packet.time.duration_since(UNIX_EPOCH)?;
-        let sec = duration.as_secs() as u32;
-        let nsec = duration.subsec_nanos();
-        if sec as u64 != duration.as_secs() {
-            return Err(PcapError::InvalidDate);
-        }
+        let duration = secs_since_epoch(packet.time);
+        let (sec, nsec) = match duration {
+            Some((sec, nsec)) => (sec, nsec),
+            None => return Err(PcapError::InvalidDate),
+        };
 
         let len = packet.data.len() as u32;
         let orig_len = packet.orig_len as u32;
@@ -103,4 +104,17 @@ impl<W: io::Write> PcapWriter<W> {
     pub fn get_options(&self) -> WriteOptions {
         self.opts
     }
+}
+#[cfg(not(feature = "time"))]
+fn secs_since_epoch(time: Time) -> Option<(u32, u32)> {
+    let duration = time.duration_since(UNIX_EPOCH).ok()?;
+    let sec = duration.as_secs().try_into().ok()?;
+    let nsec = duration.subsec_nanos();
+    Some((sec, nsec))
+}
+#[cfg(feature = "time")]
+fn secs_since_epoch(time: Time) -> Option<(u32, u32)> {
+    let sec = time.sec.try_into().ok()?;
+    let nsec = time.nsec.try_into().ok()?;
+    Some((sec, nsec))
 }

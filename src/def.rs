@@ -1,5 +1,10 @@
 use bytepack::Packed;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+
+#[cfg(not(feature = "time"))]
+use std::time::{Duration, UNIX_EPOCH};
+
+use super::{Time};
+
 
 
 /// The serialized file header data.
@@ -175,23 +180,28 @@ impl Packed for PcapRecordHeader {
         self.orig_len = self.orig_len.swap_bytes();
     }
 }
+
+#[cfg(feature = "time")]
+fn make_time(sec: i64, nsec: u32) -> Option<Time> {
+    Some(Time::new(sec, nsec.try_into().ok()?))
+}
+#[cfg(not(feature = "time"))]
+fn make_time(sec: i64, nsec: u32) -> Option<Time> {
+    UNIX_EPOCH.checked_add(Duration::new(sec.try_into().ok()?, nsec))
+}
+
 impl PcapRecordHeader {
     /// Get the time and date of this packet.
-    pub fn get_time(&self, file_header: &PcapFileHeader) -> Option<SystemTime> {
+    pub fn get_time(&self, file_header: &PcapFileHeader) -> Option<Time> {
         let nsec = if file_header.ns_res {
             self.ts_usec
         } else {
             self.ts_usec.checked_mul(1000)?
         };
-        let sec = u64::from(self.ts_sec);
-        let sec = if file_header.utc_offset < 0 {
-            sec.checked_sub(file_header.utc_offset.abs() as u64)?
-        } else {
-            sec.checked_add(file_header.utc_offset as u64)?
-        };
+        let sec = i64::from(self.ts_sec).checked_add(i64::from(file_header.utc_offset))?;
 
         if nsec < 1_000_000_000 {
-            Some(UNIX_EPOCH + Duration::new(sec, nsec))
+            make_time(sec, nsec)
         } else {
             None
         }

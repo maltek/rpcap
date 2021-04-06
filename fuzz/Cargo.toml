@@ -17,6 +17,9 @@ git = "https://github.com/rust-fuzz/libfuzzer-sys.git"
 [workspace]
 members = ["."]
 
+[features]
+time = ["rpcap/time"]
+
 [[bin]]
 name = "fuzz_target_1"
 path = "fuzz_targets/fuzz_target_1.rs"

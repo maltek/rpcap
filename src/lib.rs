@@ -6,6 +6,8 @@
 
 
 extern crate bytepack;
+#[cfg(feature = "time")]
+extern crate time;
 
 
 mod def;
@@ -15,7 +17,11 @@ pub mod read;
 pub mod write;
 
 pub use def::Linktype;
-use std::time::SystemTime;
+
+#[cfg(not(feature = "time"))]
+use std::time::SystemTime as Time;
+#[cfg(feature = "time")]
+use time::Timespec as Time;
 
 
 
@@ -29,7 +35,7 @@ use std::io;
 #[derive(Eq,PartialEq,Debug)]
 pub struct CapturedPacket<'a> {
     /// The time when the packet was captured.
-    pub time: SystemTime,
+    pub time: Time,
     /// The contents of the packet (possibly truncated to `orig_len` bytes during capture).
     /// Depending on the [`Linktype`](enum.Linktype.html) of the capture, there might be completely
     /// different data in this packet. The user of this library is responsible for interpreting the
@@ -101,8 +107,10 @@ mod test {
 
     use super::write::{PcapWriter, WriteOptions};
     use super::read::PcapReader;
+    use super::Time;
     use super::{CapturedPacket, Linktype};
 
+    #[cfg(not(feature = "time"))]
     use ::std::time::{Duration, UNIX_EPOCH};
 
     extern crate rand;
@@ -119,6 +127,15 @@ mod test {
             .collect()
     }
 
+    #[cfg(not(feature = "time"))]
+    fn make_time(secs: u64, nsecs: u32) -> Time {
+        UNIX_EPOCH + Duration::new(secs, nsecs)
+    }
+    #[cfg(feature = "time")]
+    fn make_time(secs: u64, nsecs: u32) -> Time {
+        Time::new(secs as i64, nsecs as i32)
+    }
+
     /// Generates a random packet for every buffer in `contents`.
     fn gen_packets<'a>(contents: &'a Vec<Vec<u8>>, snaplen: usize) -> Vec<CapturedPacket<'a>> {
         let mut rng = rand::thread_rng();
@@ -129,7 +146,7 @@ mod test {
                 let ns = rng.gen_range::<u32>(0, 1_000_000_000);
 
                 CapturedPacket {
-                    time: UNIX_EPOCH + Duration::new(s, ns),
+                    time: make_time(s, ns),
                     data: &data.chunks(snaplen).next().unwrap(),
                     orig_len: data.len(),
                 }

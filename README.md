@@ -32,6 +32,18 @@ while let Some(packet) = pcapr.next().unwrap() {
 
 Please note that there is no support for the newer `pcapng` file format. If you need that, you might want to have a look at the [libpcap-wrapper for rust](https://crates.io/crates/pcap). The same applies if you need the advanced filtering options it has out of the box. To disect the packets from the pcap file, you could use the [pnet library](https://crates.io/crates/pnet). In the time between me writing and publishing this library, it looks like the [pcap-file](https://crates.io/crates/pcap-file) and [pcap-rs](https://crates.io/crates/pcap-rs) libraries have popped up, which seem to be doing a very similar thing as this library.
 
+## Options
+
+By default, timestamps are returned as `std::time::SystemTime`. If you enable
+the `time` feature in `Cargo.toml`, and then the timestamps are of type
+`time::Timespec` from the `time` crate instead:
+
+```toml
+[dependencies]
+rpcap = { version = "0.4", features = ["time"] }
+```
+
+
 
 ## License
 
