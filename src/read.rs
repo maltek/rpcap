@@ -58,7 +58,7 @@ impl<R: io::Read> PcapReader<R> {
     /// to normal iterators. (The exact interface is unfortunately incompatible.)
     ///
     /// Returns `Ok(None)` on EOF, or a packet as long as one is available.
-    #[allow(unknown_lints,should_implement_trait)]
+    #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> Result<Option<CapturedPacket>, PcapError> {
 
         let rh = if let Some(PcapState { file_header: def::PcapFileHeader { need_byte_swap: true, .. }, .. }) = self.state {
