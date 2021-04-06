@@ -8,7 +8,12 @@ use super::CapturedPacket;
 use super::FileOptions;
 use super::PcapError;
 
-use bytepack::{Unpacker, Packed};
+use bytepack::Unpacker as NativeUnpacker;
+
+#[cfg(target_endian = "big")]
+use bytepack::LEUnpacker as NonNativeUnpacker;
+#[cfg(target_endian = "little")]
+use bytepack::BEUnpacker as NonNativeUnpacker;
 
 /// The `PcapReader` struct allows reading packets from a packet capture.
 pub struct PcapReader<R> {
@@ -24,7 +29,7 @@ struct PcapState {
 impl<R: io::Read> PcapReader<R> {
     /// Create a new `PcapReader` that reads the packet capture data from the specified `Reader`.
     pub fn new(mut reader: R) -> Result<(FileOptions, Self), PcapError> {
-        let fh = reader.unpack::<def::PcapFileHeaderInFile>()?;
+        let fh : def::PcapFileHeaderInFile = NativeUnpacker::unpack(&mut reader)?;
         let fh = def::PcapFileHeader::try_from(fh).or(Err(PcapError::InvalidFileHeader))?;
 
         // DOS protection TODO: make this limit (1.5GiB) configurable
@@ -56,7 +61,11 @@ impl<R: io::Read> PcapReader<R> {
     #[allow(unknown_lints,should_implement_trait)]
     pub fn next(&mut self) -> Result<Option<CapturedPacket>, PcapError> {
 
-        let rh = self.reader.unpack::<def::PcapRecordHeader>();
+        let rh = if let Some(PcapState { file_header: def::PcapFileHeader { need_byte_swap: true, .. }, .. }) = self.state {
+            NonNativeUnpacker::unpack::<def::PcapRecordHeader>(&mut self.reader)
+        } else {
+            NativeUnpacker::unpack::<def::PcapRecordHeader>(&mut self.reader)
+        };
         let rh = match rh {
             Err(e) => {
                 return if e.kind() == io::ErrorKind::UnexpectedEof {
@@ -69,9 +78,6 @@ impl<R: io::Read> PcapReader<R> {
             Ok(rh) => rh,
         };
         let state = self.state.as_mut().unwrap();
-        if state.file_header.need_byte_swap {
-            rh.switch_endianness();
-        }
 
         let size_in_pcap = usize::try_from(rh.incl_len).or(Err(PcapError::InvalidPacketSize))?;
         let size_to_read = usize::min(state.packet_buffer.len(), size_in_pcap);

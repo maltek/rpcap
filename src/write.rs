@@ -8,8 +8,12 @@ use super::PcapError;
 use super::CapturedPacket;
 use super::Time;
 
-use bytepack::Packer;
+use bytepack::Packer as NativePacker;
 
+#[cfg(target_endian = "big")]
+use bytepack::LEPacker as NonNativePacker;
+#[cfg(target_endian = "little")]
+use bytepack::BEPacker as NonNativePacker;
 
 
 pub use super::FileOptions as WriteOptions;
@@ -25,7 +29,12 @@ impl<W: io::Write> PcapWriter<W> {
     pub fn new(mut writer: W, opts: WriteOptions) -> Result<Self, PcapError> {
         let fh = def::PcapFileHeaderInFile::new(opts.snaplen, opts.linktype)
             .ok_or(PcapError::InvalidFileHeader)?;
-        writer.pack(fh)?;
+
+        if opts.non_native_byte_order {
+            NonNativePacker::pack(&mut writer, fh)?
+        } else {
+            NativePacker::pack(&mut writer,fh)?;
+        }
 
         PcapWriter::append_unchecked(writer, opts)
     }
@@ -75,10 +84,12 @@ impl<W: io::Write> PcapWriter<W> {
             orig_len,
         };
 
-        // TODO: We might want to support for writing files in non-native endianness at some point.
-
-        self.writer.pack(record_header)?;
-        self.writer.write_all(packet.data).map_err(PcapError::from)
+        if self.opts.non_native_byte_order {
+            NonNativePacker::pack(&mut self.writer, record_header)?
+        } else {
+            NativePacker::pack(&mut self.writer, record_header)?;
+        }
+        self.writer.write_all(&packet.data[..len as usize]).map_err(PcapError::from)
     }
 
     /// Flushes the underlying writer.
