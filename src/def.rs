@@ -5,6 +5,8 @@ use std::time::{Duration, UNIX_EPOCH};
 
 use super::{Time};
 
+use std::convert::{TryFrom,TryInto};
+
 
 
 /// The serialized file header data.
@@ -34,20 +36,15 @@ const PCAP_VERSION_MINOR: u16 = 4;
 impl PcapFileHeaderInFile {
     /// Creates a new file header based on snap length and link type.
     pub fn new(snaplen: usize, linktype: u32) -> Option<PcapFileHeaderInFile> {
-        let snap = snaplen as u32;
-        if snap as usize != snaplen {
-            None
-        } else {
-            Some(PcapFileHeaderInFile {
-                magic_num: PcapMagic::NanoSecondResolution.into(),
-                version_major: PCAP_VERSION_MAJOR,
-                version_minor: PCAP_VERSION_MINOR,
-                thiszone: 0,
-                sigfigs: 0,
-                snaplen: snap,
-                network: linktype,
-            })
-        }
+        Some(PcapFileHeaderInFile {
+            magic_num: PcapMagic::NanoSecondResolution.into(),
+            version_major: PCAP_VERSION_MAJOR,
+            version_minor: PCAP_VERSION_MINOR,
+            thiszone: 0,
+            sigfigs: 0,
+            snaplen: u32::try_from(snaplen).ok()?,
+            network: linktype,
+        })
     }
 }
 impl Packed for PcapFileHeaderInFile {
@@ -74,33 +71,32 @@ pub struct PcapFileHeader {
     /// The maximum size of captured packets.
     pub snaplen: usize,
 }
-impl PcapFileHeader {
+impl TryFrom<PcapFileHeaderInFile> for PcapFileHeader {
+    type Error = ();
+
     /// Parse header data from file.
-    pub fn try_from(mut header: PcapFileHeaderInFile) -> Option<Self> {
+    fn try_from(mut header: PcapFileHeaderInFile) -> Result<Self, Self::Error> {
         let magic = PcapMagic::try_from(header.magic_num)?;
 
         if magic.need_byte_swap() {
             header.switch_endianness();
         }
 
-        let snaplen = header.snaplen as usize;
-        if snaplen as u32 != header.snaplen {
-            return None;
-        }
+        let snaplen = usize::try_from(header.snaplen).or(Err(()))?;
 
         // docs say this version number hasn't changed since 1998, so this simplistic comparison
         // should suffice
         if header.version_major == PCAP_VERSION_MAJOR &&
            header.version_minor == PCAP_VERSION_MINOR {
-            Some(PcapFileHeader {
-                ns_res: magic.ns_res(),
-                need_byte_swap: magic.need_byte_swap(),
-                network: header.network,
-                utc_offset: header.thiszone,
-                snaplen: snaplen,
+            Ok(PcapFileHeader {
+               ns_res: magic.ns_res(),
+               need_byte_swap: magic.need_byte_swap(),
+               network: header.network,
+               utc_offset: header.thiszone,
+               snaplen,
             })
         } else {
-            None
+            Err(())
         }
     }
 }
@@ -116,26 +112,30 @@ enum PcapMagic {
     /// same byte order as in memory, timestamps with nanosecond resolution
     NanoSecondResolution = 0xa1b2_3c4d,
     /// different byte order than in memory, timestamps with microsecond resolution
-    ByteSwap = 0xd4c3_b2a1,
+    ByteSwap = (Self::Normal as u32).swap_bytes(),
     /// different byte order than in memory, timestamps with nanosecond resolution
-    NanoSecondResolutionByteSwap = 0x4d3c_b2a1,
+    NanoSecondResolutionByteSwap = (Self::NanoSecondResolution as u32).swap_bytes(),
 }
-impl PcapMagic {
+impl TryFrom<u32> for PcapMagic {
+    type Error = ();
+
     /// Try to convert a `u32` to a `PcapMagic`.
-    fn try_from(val: u32) -> Option<PcapMagic> {
+    fn try_from(val: u32) -> Result<Self, Self::Error> {
         if val == PcapMagic::Normal.into() {
-            Some(PcapMagic::Normal)
+            Ok(PcapMagic::Normal)
         } else if val == PcapMagic::NanoSecondResolution.into() {
-            Some(PcapMagic::NanoSecondResolution)
+            Ok(PcapMagic::NanoSecondResolution)
         } else if val == PcapMagic::ByteSwap.into() {
-            Some(PcapMagic::ByteSwap)
+            Ok(PcapMagic::ByteSwap)
         } else if val == PcapMagic::NanoSecondResolutionByteSwap.into() {
-            Some(PcapMagic::NanoSecondResolutionByteSwap)
+            Ok(PcapMagic::NanoSecondResolutionByteSwap)
         } else {
-            None
+            Err(())
         }
     }
-    /// Does the header information have the right endianness?
+}
+impl PcapMagic {
+    /// Does the file use native endianess of our platform?
     fn need_byte_swap(self) -> bool {
         match self {
             PcapMagic::Normal |

@@ -1,4 +1,4 @@
-
+use std::convert::{TryInto,TryFrom};
 use std::io;
 #[cfg(not(feature = "time"))]
 use std::time::UNIX_EPOCH;
@@ -69,12 +69,9 @@ impl<W: io::Write> PcapWriter<W> {
             None => return Err(PcapError::InvalidDate),
         };
 
-        let len = packet.data.len() as u32;
-        let orig_len = packet.orig_len as u32;
-        if packet.data.len() > self.opts.snaplen || len as usize != packet.data.len() ||
-           orig_len as usize != packet.orig_len {
-            return Err(PcapError::InvalidPacketSize);
-        }
+        let len = u32::try_from(packet.data.len()).or(Err(PcapError::InvalidPacketSize))?;
+        let len = u32::min(len, self.opts.snaplen as u32);
+        let orig_len = u32::try_from(packet.orig_len).or(Err(PcapError::InvalidPacketSize))?;
 
         let record_header = def::PcapRecordHeader {
             // TODO: We might want to support low-res timestamps at some point.

@@ -1,5 +1,6 @@
 
 use std::io;
+use std::convert::TryFrom;
 
 use super::def;
 use super::PcapError;
@@ -72,32 +73,25 @@ impl<R: io::Read> PcapReader<R> {
             rh.switch_endianness();
         }
 
-        let mut toread = rh.incl_len as usize;
-        if state.packet_buffer.capacity() < toread {
-            while toread > state.packet_buffer.capacity() {
-                let cnt = self.reader.read(state.packet_buffer.as_mut_slice())?;
-                if cnt == 0 {
-                    return Err(PcapError::InvalidPacketSize);
-                }
-                toread -= cnt;
-            }
-            self.reader.read_exact(&mut state.packet_buffer[..toread])?;
-            return Err(PcapError::InvalidPacketSize);
-        }
+        let size_in_pcap = usize::try_from(rh.incl_len).or(Err(PcapError::InvalidPacketSize))?;
+        let size_to_read = usize::min(state.packet_buffer.len(), size_in_pcap);
 
-        let buf = &mut state.packet_buffer[..toread];
+        let buf = &mut state.packet_buffer[..size_to_read];
         self.reader.read_exact(buf)?;
 
-        let orig_len = rh.orig_len as usize;
-        if orig_len as u32 != rh.orig_len {
-            return Err(PcapError::InvalidPacketSize);
+        if size_to_read < size_in_pcap {
+            // we used to return InvalidPacketSize here, now we just drop the excessive data
+            let mut take = self.reader.by_ref().take((size_in_pcap - size_to_read) as u64);
+            io::copy(&mut take, &mut io::sink())?;
         }
+
+        let orig_len = usize::try_from(rh.orig_len).or(Err(PcapError::InvalidPacketSize))?;
 
         if let Some(t) = rh.get_time(&state.file_header) {
             Ok(Some(CapturedPacket {
                 time: t,
                 data: buf,
-                orig_len: orig_len,
+                orig_len,
             }))
         } else {
             Err(PcapError::InvalidDate)
