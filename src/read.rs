@@ -103,6 +103,11 @@ impl<R: io::Read> PcapReader<R> {
             Err(PcapError::InvalidDate)
         }
     }
+
+    /// Destroys this `PcapReader` and returns access to the underlying `Read`.
+    pub fn take_reader(self) -> R {
+        self.reader
+    }
 }
 
 #[cfg(test)]
