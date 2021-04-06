@@ -10,17 +10,14 @@ An all-Rust library for reading and writing PCAP files.
 // read a PCAP file
 let infile = File::open("example.pcap").unwrap();
 let reader = BufReader::new(infile);
-let mut pcapr = PcapReader::new(reader).unwrap();
-println!("linktype: {}", pcapr.get_linktype());
-println!("snaplen: {}", pcapr.get_snaplen());
+let (file_opts, mut pcapr) = PcapReader::new(reader).unwrap();
+println!("type of captured packets: {}", file_opts.linktype);
+println!("maximum packet size: {}", pcapr.snaplen);
 
 // create a new PCAP file
 let outfile = File::create("copy.pcap").unwrap();
 let writer = BufWriter::new(outfile);
-let mut pcapw = PcapWriter::new(writer, WriteOptions {
-    snaplen: pcapr.get_linktype(),
-    linktype: pcapr.get_snaplen(),
-}).unwrap();
+let mut pcapw = PcapWriter::new(writer, file_opts).unwrap();
 
 // copy all packets from example.pcap to copy.pcap
 while let Some(packet) = pcapr.next().unwrap() {
@@ -59,3 +56,24 @@ at your option.
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any
 additional terms or conditions.
+
+
+## Upgrading from Version 0.3
+
+`PcapWriter::append` now requires an argument of type `Read + Write + Seek`.
+This allows the library to ensure that the output format matches of written
+packages matches the format specified in the file header. If this does not work
+for your use case, you can use the new `PcapWriter::append_unchecked` function.
+Be sure to only use it with files created with this library on the same
+platform, or else the files might get corrupted.
+
+`PcapReader::new` now returns a tuple of information about the file header and a
+faux-iterator. If you do not need the first item in the tuple, you can do
+something like `let (_, reader) = PcapReader::new()`.
+
+`WriteOptions` is now called `FileOptions`, and has two additional fields. As a
+result, all possible variants of PCAP (v1) files can be created now. Due to the
+previous changes, it is now much less likely you'd have to manually create
+instances of this struct. If you do and are upgrading from an old release, set
+`high_res_timestamps` to `true` and `non_native_byte_order` to `false` to get
+the old behavior back.

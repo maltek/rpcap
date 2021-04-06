@@ -45,6 +45,21 @@ pub struct CapturedPacket<'a> {
     pub orig_len: usize,
 }
 
+/// The options for packet capture files.
+#[derive(Copy,Clone,PartialEq,Eq,Debug)]
+pub struct FileOptions {
+    /// The maximum size of a packet in the file.
+    ///
+    /// Packets larger than this usually get truncated to this size by the recording application.
+    pub snaplen: usize,
+    /// The type of packets in the file. See `Linktype` for known values.
+    pub linktype: u32,
+    /// Determines the timestamp format of packets the file.
+    pub high_res_timestamps: bool,
+    /// Determines the byte order for the file headers.
+    pub non_native_byte_order: bool,
+}
+
 
 /// The error type for this crate.
 #[derive(Debug)]
@@ -99,7 +114,7 @@ impl error::Error for PcapError {
 
 #[cfg(test)]
 mod test {
-    use std::io::Write;
+    use std::io::{Cursor, Write};
 
     use super::write::{PcapWriter, WriteOptions};
     use super::read::PcapReader;
@@ -166,16 +181,18 @@ mod test {
         let packets = gen_packets(&contents, MAX_PACKET_SIZE);
 
         let opts = WriteOptions {
+            high_res_timestamps: true,
+            non_native_byte_order: false,
             snaplen: MAX_PACKET_SIZE,
             linktype: Linktype::NULL.into(),
         };
 
-        let mut buf = write_packets(PcapWriter::new(Vec::new(), opts).unwrap(), &packets[..packets.len()/2]);
-        buf = write_packets(PcapWriter::append(buf, opts).unwrap(), &packets[packets.len()/2..]);
+        let buf = write_packets(PcapWriter::new(Vec::new(), opts).unwrap(), &packets[..packets.len()/2]);
+        let buf = PcapWriter::append(Cursor::new(buf)).unwrap();
+        let buf = write_packets(buf, &packets[packets.len()/2..]).into_inner();
 
-        let mut reader = PcapReader::new(buf.as_slice()).unwrap();
-        assert_eq!(reader.get_linktype(), Linktype::NULL.into());
-        assert_eq!(reader.get_snaplen(), MAX_PACKET_SIZE);
+        let (ropts, mut reader) = PcapReader::new(buf.as_slice()).unwrap();
+        assert_eq!(opts, ropts);
         for expect in packets {
             let actual = reader.next().unwrap().unwrap();
             assert_eq!(actual, expect);

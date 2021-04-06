@@ -11,14 +11,8 @@ use super::Time;
 use bytepack::Packer;
 
 
-/// The options for creating a new packet capture file.
-#[derive(Copy,Clone)]
-pub struct WriteOptions {
-    /// The maximum size of a packet that can be written to the file.
-    pub snaplen: usize,
-    /// The type of packets that will be written to the file. See `Linktype` for known values.
-    pub linktype: u32,
-}
+
+pub use super::FileOptions as WriteOptions;
 
 /// The `PcapReader` struct allows reading packets from a packet capture.
 pub struct PcapWriter<W: io::Write> {

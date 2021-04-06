@@ -1,17 +1,18 @@
 
 use std::io;
+use std::io::Read;
 use std::convert::TryFrom;
 
 use super::def;
-use super::PcapError;
 use super::CapturedPacket;
+use super::FileOptions;
+use super::PcapError;
 
 use bytepack::{Unpacker, Packed};
 
 /// The `PcapReader` struct allows reading packets from a packet capture.
 pub struct PcapReader<R> {
     reader: R,
-    network: u32,
     state: Option<PcapState>,
 }
 struct PcapState {
@@ -22,31 +23,31 @@ struct PcapState {
 
 impl<R: io::Read> PcapReader<R> {
     /// Create a new `PcapReader` that reads the packet capture data from the specified `Reader`.
-    pub fn new(mut reader: R) -> Result<Self, PcapError> {
+    pub fn new(mut reader: R) -> Result<(FileOptions, Self), PcapError> {
         let fh = reader.unpack::<def::PcapFileHeaderInFile>()?;
-        let fh = def::PcapFileHeader::try_from(fh).ok_or(PcapError::InvalidFileHeader)?;
+        let fh = def::PcapFileHeader::try_from(fh).or(Err(PcapError::InvalidFileHeader))?;
 
-        let buffer = vec![0; fh.snaplen.into()];
-        Ok(PcapReader {
-            reader: reader,
-            network: fh.network,
-            state: Some(PcapState {
-                file_header: fh,
-                packet_buffer: buffer,
-            }),
-        })
-    }
-    /// Returns the link type of this packet capture. See `Linktype` for the known values.
-    pub fn get_linktype(&self) -> u32 {
-        self.network
-    }
-    /// Returns the maximum packet size. Packets larger than this usually get truncated to this
-    /// size by the recording application.
-    pub fn get_snaplen(&self) -> usize {
-        match self.state.as_ref() {
-            None => 0,
-            Some(state) => state.packet_buffer.len(),
+        // DOS protection TODO: make this limit (1.5GiB) configurable
+        if fh.snaplen > 0x60000000 {
+            return Err(PcapError::InvalidFileHeader);
         }
+        let buffer = vec![0; fh.snaplen];
+
+        Ok((
+            FileOptions {
+                snaplen: fh.snaplen,
+                linktype: fh.network,
+                high_res_timestamps: fh.ns_res,
+                non_native_byte_order: fh.need_byte_swap,
+            },
+            PcapReader {
+                reader,
+                state: Some(PcapState {
+                    file_header: fh,
+                    packet_buffer: buffer,
+                }),
+            }
+        ))
     }
     /// This function allows iterating over the packets in the packet capture, in a similar fashion
     /// to normal iterators. (The exact interface is unfortunately incompatible.)
@@ -54,20 +55,19 @@ impl<R: io::Read> PcapReader<R> {
     /// Returns `Ok(None)` on EOF, or a packet as long as one is available.
     #[allow(unknown_lints,should_implement_trait)]
     pub fn next(&mut self) -> Result<Option<CapturedPacket>, PcapError> {
-        if self.state.is_none() {
-            return Ok(None);
-        }
 
         let rh = self.reader.unpack::<def::PcapRecordHeader>();
-        if let Err(e) = rh {
-            return if e.kind() == io::ErrorKind::UnexpectedEof {
-                self.state = None;
-                Ok(None)
-            } else {
-                Err(e.into())
-            };
-        }
-        let mut rh = rh.unwrap();
+        let rh = match rh {
+            Err(e) => {
+                return if e.kind() == io::ErrorKind::UnexpectedEof {
+                    self.state = None;
+                    Ok(None)
+                } else {
+                    Err(e.into())
+                };
+            },
+            Ok(rh) => rh,
+        };
         let state = self.state.as_mut().unwrap();
         if state.file_header.need_byte_swap {
             rh.switch_endianness();
