@@ -26,7 +26,6 @@ use time::Timespec as Time;
 
 
 use std::error;
-use std::error::Error;
 use std::fmt;
 use std::io;
 
@@ -80,20 +79,17 @@ impl From<std::time::SystemTimeError> for PcapError {
 }
 impl fmt::Display for PcapError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.description())
-    }
-}
-impl error::Error for PcapError {
-    fn description(&self) -> &str {
-        match *self {
-            PcapError::Io(ref err) => err.description(),
+        let desc = match *self {
+            PcapError::Io(ref err) => { return err.fmt(f); },
             PcapError::InvalidPacketSize => "Parsed packet has an invalid size.",
             PcapError::InvalidDate => "Parsed packet has an invalid date.",
             PcapError::InvalidFileHeader => "The pcap file has an invalid/unknown file header.",
-        }
+        };
+        write!(f, "{}", desc)
     }
-
-    fn cause(&self) -> Option<&error::Error> {
+}
+impl error::Error for PcapError {
+    fn cause(&self) -> Option<&dyn error::Error> {
         match *self {
             PcapError::Io(ref err) => Some(err),
             _ => None,
