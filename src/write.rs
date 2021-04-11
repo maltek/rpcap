@@ -67,7 +67,7 @@ impl<W: io::Write> PcapWriter<W> {
     /// Write a package to the capture file.
     pub fn write(&mut self, packet: &CapturedPacket) -> Result<(), PcapError> {
         let duration = secs_since_epoch(packet.time);
-        let (sec, nsec) = match duration {
+        let (mut sec, nsec) = match duration {
             Some((sec, nsec)) => (sec, nsec),
             None => return Err(PcapError::InvalidDate),
         };
@@ -76,9 +76,21 @@ impl<W: io::Write> PcapWriter<W> {
         let len = u32::min(len, self.opts.snaplen as u32);
         let orig_len = u32::try_from(packet.orig_len).or(Err(PcapError::InvalidPacketSize))?;
 
+        let subsec = if self.opts.high_res_timestamps {
+            nsec
+        } else {
+            let usec = div_rounded(nsec, 1000);
+            if usec == 1_000_000 {
+                sec = sec.saturating_add(1);
+                0
+            } else {
+                usec
+            }
+        };
+
         let record_header = def::PcapRecordHeader {
             ts_sec: sec,
-            ts_usec: if self.opts.high_res_timestamps { nsec } else { div_rounded(nsec, 1000) },
+            ts_usec: subsec,
             incl_len: len,
             orig_len,
         };
