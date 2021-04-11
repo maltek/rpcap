@@ -27,7 +27,7 @@ pub struct PcapWriter<W: io::Write> {
 impl<W: io::Write> PcapWriter<W> {
     /// Create a new `PcapWriter` that writes the packet capture data to the specified `Write`.
     pub fn new(mut writer: W, opts: WriteOptions) -> Result<Self, PcapError> {
-        let fh = def::PcapFileHeaderInFile::new(opts.snaplen, opts.linktype)
+        let fh = def::PcapFileHeaderInFile::new(opts)
             .ok_or(PcapError::InvalidFileHeader)?;
 
         if opts.non_native_byte_order {

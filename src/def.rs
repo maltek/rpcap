@@ -3,7 +3,7 @@ use bytepack::Packed;
 #[cfg(not(feature = "time"))]
 use std::time::{Duration, UNIX_EPOCH};
 
-use super::{Time};
+use super::{FileOptions, Time};
 
 use std::convert::{TryFrom,TryInto};
 
@@ -35,20 +35,26 @@ const PCAP_VERSION_MINOR: u16 = 4;
 
 impl PcapFileHeaderInFile {
     /// Creates a new file header based on snap length and link type.
-    pub fn new(snaplen: usize, linktype: u32) -> Option<PcapFileHeaderInFile> {
+    pub fn new(opts: FileOptions) -> Option<PcapFileHeaderInFile> {
+        let magic = if opts.high_res_timestamps {
+            PcapMagic::NanoSecondResolution
+        } else {
+            PcapMagic::Normal
+        };
         Some(PcapFileHeaderInFile {
-            magic_num: PcapMagic::NanoSecondResolution.into(),
+            magic_num: magic.into(),
             version_major: PCAP_VERSION_MAJOR,
             version_minor: PCAP_VERSION_MINOR,
             thiszone: 0,
             sigfigs: 0,
-            snaplen: u32::try_from(snaplen).ok()?,
-            network: linktype,
+            snaplen: u32::try_from(opts.snaplen).ok()?,
+            network: opts.linktype,
         })
     }
 }
 impl Packed for PcapFileHeaderInFile {
     fn switch_endianness(&mut self) {
+        self.magic_num = self.magic_num.swap_bytes();
         self.version_major = self.version_major.swap_bytes();
         self.version_minor = self.version_minor.swap_bytes();
         self.thiszone = self.thiszone.swap_bytes();
