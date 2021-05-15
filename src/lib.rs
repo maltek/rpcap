@@ -16,6 +16,9 @@ pub mod read;
 /// Functionality for writing packet captures.
 pub mod write;
 
+#[cfg(fuzzing)]
+pub mod fuzz;
+
 pub use def::Linktype;
 
 #[cfg(not(feature = "time"))]

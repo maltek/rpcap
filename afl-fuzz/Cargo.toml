@@ -1,0 +1,32 @@
+[package]
+name = "afl-fuzz"
+version = "0.1.0"
+authors = ["Malte Kraus <git@maltekraus.de>"]
+edition = "2018"
+
+[workspace]
+members = ["."]
+[features]
+time = ["rpcap/time"]
+
+[dependencies]
+afl = "*"
+rpcap = { path = ".." }
+
+[profile.release]
+overflow-checks = true
+debug = true
+split-debuginfo = "unpacked"
+debug-assertions = true
+lto = true
+panic = "abort"
+opt-level = 3
+
+[profile.dev]
+overflow-checks = true
+debug = true
+split-debuginfo = "unpacked"
+debug-assertions = true
+lto = true
+panic = "abort"
+opt-level = 1

@@ -8,10 +8,9 @@ publish = false
 [package.metadata]
 cargo-fuzz = true
 
-[dependencies.rpcap]
-path = ".."
-[dependencies.libfuzzer-sys]
-git = "https://github.com/rust-fuzz/libfuzzer-sys.git"
+[dependencies]
+libfuzzer-sys = "0.4"
+rpcap = { path = ".." }
 
 # Prevent this from interfering with workspaces
 [workspace]
