@@ -222,7 +222,7 @@ impl PcapRecordHeader {
 /// descriptions.
 #[derive(Copy,Clone)]
 #[repr(u32)]
-#[allow(dead_code,non_camel_case_types)]
+#[allow(dead_code,non_camel_case_types,clippy::upper_case_acronyms)]
 pub enum Linktype {
     NULL = 0,
     /// Ethernet packets
