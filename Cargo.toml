@@ -1,6 +1,6 @@
 [package]
 name = "rpcap"
-version = "0.4.0"
+version = "1.0.0"
 authors = ["Malte Kraus <git@maltekraus.de>"]
 repository = "https://github.com/maltek/rpcap"
 documentation = "https://docs.rs/rpcap/"
