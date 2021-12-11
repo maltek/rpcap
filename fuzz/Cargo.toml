@@ -3,6 +3,7 @@ name = "rpcap-fuzz"
 version = "0.0.1"
 authors = ["Malte Kraus"]
 publish = false
+edition = "2021"
 
 [package.metadata]
 cargo-fuzz = true

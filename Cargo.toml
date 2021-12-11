@@ -20,7 +20,7 @@ keywords = [
     "pcap",
     "sniffing",
 ]
-edition = "2018"
+edition = "2021"
 
 [features]
 default = []
