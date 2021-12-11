@@ -1,8 +1,7 @@
-
 [package]
 name = "rpcap-fuzz"
 version = "0.0.1"
-authors = ["Automatically generated"]
+authors = ["Malte Kraus"]
 publish = false
 
 [package.metadata]
