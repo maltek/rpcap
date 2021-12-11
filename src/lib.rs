@@ -203,3 +203,9 @@ mod test {
         assert!(reader.next().unwrap().is_none());
     }
 }
+
+
+// hack to include README.md in doc tests
+#[doc = include_str!("../README.md")]
+#[cfg(doctest)]
+pub struct ReadmeDoctests;

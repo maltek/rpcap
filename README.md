@@ -7,12 +7,17 @@ An all-Rust library for reading and writing PCAP files.
 [Full API Documentation](https://docs.rs/rpcap/)
 
 ```rust
+use std::fs::File;
+use std::io::{BufReader, BufWriter};
+use rpcap::read::PcapReader;
+use rpcap::write::{PcapWriter, WriteOptions};
+
 // read a PCAP file
 let infile = File::open("example.pcap").unwrap();
 let reader = BufReader::new(infile);
 let (file_opts, mut pcapr) = PcapReader::new(reader).unwrap();
 println!("type of captured packets: {}", file_opts.linktype);
-println!("maximum packet size: {}", pcapr.snaplen);
+println!("maximum packet size: {}", file_opts.snaplen);
 
 // create a new PCAP file
 let outfile = File::create("copy.pcap").unwrap();
@@ -21,7 +26,7 @@ let mut pcapw = PcapWriter::new(writer, file_opts).unwrap();
 
 // copy all packets from example.pcap to copy.pcap
 while let Some(packet) = pcapr.next().unwrap() {
-    println!("packet at {} with size {} (cropped from {})",
+    println!("packet at {:?} with size {} (cropped from {})",
         packet.time, packet.data.len(), packet.orig_len);
     pcapw.write(&packet).unwrap();
 }
