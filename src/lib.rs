@@ -161,7 +161,7 @@ mod test {
 
                 CapturedPacket {
                     time: make_time(s, ns),
-                    data: &data.chunks(snaplen).next().unwrap(),
+                    data: &data[..usize::min(data.len(), snaplen)],
                     orig_len: data.len(),
                 }
             })
