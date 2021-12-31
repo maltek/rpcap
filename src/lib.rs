@@ -135,8 +135,8 @@ mod test {
         let mut rng = rand::thread_rng();
         (0..10)
             .map(|_| {
-                let size = rng.gen_range::<usize>(0, 2000);
-                rng.gen_iter::<u8>().take(size).collect()
+                let size: usize = rng.gen_range(0..2000);
+                (0..size).map(|_| rng.gen()).collect()
             })
             .collect()
     }
@@ -156,8 +156,8 @@ mod test {
 
         contents.iter()
             .map(|data| {
-                let s = rng.gen_range::<u64>(0, u64::from(u32::max_value()) + 1);
-                let ns = rng.gen_range::<u32>(0, 1_000_000_000);
+                let s = rng.gen_range(0..(u64::from(u32::max_value()) + 1));
+                let ns = rng.gen_range(0..1_000_000_000);
 
                 CapturedPacket {
                     time: make_time(s, ns),
