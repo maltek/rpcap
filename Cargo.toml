@@ -9,6 +9,7 @@ description="An all-Rust library for reading and writing PCAP files."
 exclude = [
     "*.pcap*",
     ".gitignore",
+    "out",
 ]
 readme = "README.md"
 categories = [
