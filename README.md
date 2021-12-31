@@ -36,13 +36,13 @@ Please note that there is no support for the newer `pcapng` file format. If you 
 
 ## Options
 
-By default, timestamps are returned as `std::time::SystemTime`. If you enable
-the `time` feature in `Cargo.toml`, and then the timestamps are of type
-`time::Timespec` from the `time` crate instead:
+By default, timestamps are returned as `std::time::SystemTime`. With the optiona
+`time` feature you can opt to get values as `time::Timespec` type from the `time`
+crate (version `1.0`) instead:
 
 ```toml
 [dependencies]
-rpcap = { version = "0.4", features = ["time"] }
+rpcap = { version = "1.0.0", features = ["time"] }
 ```
 
 
